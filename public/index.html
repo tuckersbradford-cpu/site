@@ -401,7 +401,7 @@
     <div class="hero">
       <div class="hero-over">PREMIUM FOLDERS</div>
       <h2 id="video-list-title">Premium Collection</h2>
-      <p>VIP channels and groups with daily updates. Catalog syncs from Supabase; previews use signed Wasabi URLs like the main app.</p>
+      <p>VIP channels and groups with daily updates.</p>
       <div class="chips">
         <span class="chip" id="chip-online">● 0 BUYING NOW</span>
         <span class="chip">⚡ ONLINE</span>
@@ -435,8 +435,7 @@
       <div class="pay-section">
         <div class="pay-section-title">Card &amp; digital wallets</div>
         <div class="pay-actions">
-          <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px" id="btn-payjsr">Continue with card</button>
-          <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px" id="btn-paypp">PayPal or card</button>
+          <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px" id="btn-paypp">Pay instantly</button>
         </div>
       </div>
 
@@ -525,21 +524,10 @@
         return j.success && j.url ? j.url : null;
       }
 
-      function checkoutUrl(price, maskedName, displayTitle, method, videoId) {
+      function checkoutUrl(price, maskedName, displayTitle, videoId) {
         var origin = normalizeOrigin(String(EBOOKS_ORIGIN || '').trim().replace(/\/+$/, ''));
         if (!origin) return null;
-        method = (method || 'payjsr').toLowerCase();
         var vid = videoId || '';
-        if (method === 'payjsr') {
-          var p = new URLSearchParams();
-          p.set('amount', String(price));
-          p.set('currency', 'USD');
-          p.set('product_name', maskedName || 'Premium Digital Content');
-          p.set('display_title', displayTitle || maskedName);
-          p.set('method', 'payjsr');
-          if (vid) p.set('video_id', vid);
-          return origin + '/api/paypal-checkout?' + p.toString();
-        }
         var successUrl = window.location.origin + window.location.pathname + '?paid=1&video_id=' + encodeURIComponent(vid);
         var cancelUrl = window.location.origin + window.location.pathname + '?payment_canceled=true';
         var p2 = new URLSearchParams();
@@ -955,16 +943,10 @@
         document.getElementById('dlg-pay').close();
       });
 
-      document.getElementById('btn-payjsr').addEventListener('click', function () {
-        if (!payTarget) return;
-        var masked = payTarget.masked_product_name || 'Premium Digital Content';
-        var u = checkoutUrl(payTarget.price, masked, payTarget.title, 'payjsr', payTarget.id);
-        if (u) window.location.href = u;
-      });
       document.getElementById('btn-paypp').addEventListener('click', function () {
         if (!payTarget) return;
         var masked = MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)];
-        var u = checkoutUrl(payTarget.price, masked, payTarget.title, 'paypal', payTarget.id);
+        var u = checkoutUrl(payTarget.price, masked, payTarget.title, payTarget.id);
         if (u) window.location.href = u;
       });
 
