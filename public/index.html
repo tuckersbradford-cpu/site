@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{SITE_NAME}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --red: #e31b23;
+      --red2: #ff2f77;
+      --bg: #050508;
+      --card: linear-gradient(165deg, #121218 0%, #0a0a0e 52%, #08080c 100%);
+      --chip: rgba(15,15,17,0.96);
+      --text: #f2f2f3;
+      --muted: #9e97a8;
+      --stroke: rgba(255,255,255,0.07);
+      --stroke-hi: rgba(227,27,35,0.42);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { color-scheme: dark; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    .container { max-width: 1180px; margin: 0 auto; padding: 1.25rem; }
+    .hero {
+      border: 1px solid rgba(227, 27, 35, 0.6);
+      border-radius: 20px;
+      padding: 1.35rem 1.65rem;
+      background: linear-gradient(180deg, rgba(12,12,14,0.98) 0%, rgba(8,8,10,0.98) 100%);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.65);
+      margin-bottom: 1.25rem;
+    }
+    .hero-over { color: #ff8e95; font-size: 0.72rem; font-weight: 800; letter-spacing: .12em; }
+    .hero h2 {
+      color: var(--red);
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+      line-height: 1.1;
+      margin: 0.35rem 0;
+    }
+    .hero p { color: #f3d8da; font-size: 0.88rem; max-width: 520px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.75rem; }
+    .chip {
+      font-size: 0.68rem; font-weight: 800; padding: 0.32rem 0.65rem; border-radius: 999px;
+      background: var(--chip); color: #ffc2c6; border: 1px solid rgba(227,27,35,0.5);
+    }
+    .toolbar {
+      display: flex; flex-direction: column; gap: 0.75rem;
+      margin: 1.5rem 0 1rem;
+    }
+    @media (min-width: 768px) {
+      .toolbar { flex-direction: row; align-items: center; justify-content: space-between; }
+    }
+    .toolbar h1 { font-size: 1.45rem; font-weight: 800; color: #ffe3e3; }
+    .search {
+      width: 100%; max-width: 320px; padding: 0.55rem 1rem; border-radius: 999px;
+      border: 1px solid rgba(227,27,35,0.45); background: rgba(15,15,18,0.95); color: #ffe6e6;
+      font-family: inherit; font-size: 0.88rem;
+    }
+    .search:focus { outline: none; border-color: rgba(227,27,35,0.9); }
+    .alert {
+      display: none; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1rem;
+      background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.35); color: #bfdbfe;
+    }
+    .alert.on { display: block; }
+    .alert.err { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.35); color: #fecaca; }
+    .grid {
+      display: grid; gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+    @media (min-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 1100px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+    .vcard {
+      position: relative;
+      border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.04) inset, 0 14px 40px rgba(0,0,0,0.45);
+      cursor: pointer;
+      transition: transform 0.28s var(--ease), box-shadow 0.28s var(--ease), border-color 0.28s var(--ease);
+    }
+    .vcard:focus-within {
+      outline: none;
+      border-color: var(--stroke-hi);
+      box-shadow: 0 0 0 1px rgba(227,27,35,0.25), 0 18px 48px rgba(0,0,0,0.5);
+    }
+    .vcard:hover {
+      transform: translateY(-3px);
+      border-color: var(--stroke-hi);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 22px 56px rgba(0,0,0,0.55),
+        0 0 42px rgba(227,27,35,0.12);
+    }
+    .vcard.ph-card {
+      cursor: default;
+      pointer-events: none;
+      opacity: 0.82;
+      border-color: rgba(255,255,255,0.055);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+    }
+    .vcard.ph-card:hover {
+      transform: none;
+      border-color: rgba(255,255,255,0.055);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+    }
+    .vcard-media {
+      position: relative; width: 100%; padding-top: 56.25%;
+      background: radial-gradient(120% 80% at 50% 0%, #1a1020 0%, #050508 72%);
+    }
+    .vcard-media-inner {
+      position: absolute; inset: 0;
+      isolation: isolate;
+      contain: layout style;
+    }
+    .vcard-media img, .vcard-media video {
+      width: 100%; height: 100%; object-fit: cover; display: block; background: #05000c;
+    }
+    .skel {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, #0a0a12 0%, #12121a 50%, #0a0a12 100%);
+      background-size: 200% 100%; animation: sh 1.2s ease-in-out infinite;
+    }
+    @keyframes sh { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+    .play-hit {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      z-index: 4; transition: opacity 0.2s;
+    }
+    .play-hit[hidden] { display: none !important; }
+    .play-circ {
+      width: 62px; height: 62px; border-radius: 50%;
+      background: rgba(8,8,12,0.72);
+      border: 1px solid rgba(255,255,255,0.18);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.45);
+      transition: transform 0.22s var(--ease), border-color 0.22s, background 0.22s;
+    }
+    .vcard:hover .play-circ {
+      border-color: rgba(255,255,255,0.28);
+      background: rgba(227,27,35,0.15);
+      transform: scale(1.04);
+    }
+    .play-tri {
+      width: 0; height: 0; border-top: 12px solid transparent; border-bottom: 12px solid transparent;
+      border-left: 19px solid rgba(255,255,255,0.95); margin-left: 5px;
+    }
+    .grad-over {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to top, rgba(8,8,12,0.92) 0%, rgba(10,10,14,0.35) 45%, transparent 100%);
+      opacity: 0.35; z-index: 2; transition: opacity 0.28s var(--ease);
+    }
+    .vcard:hover .grad-over { opacity: 0.72; }
+    .badge-price {
+      position: absolute; top: 10px; right: 10px; z-index: 3;
+      font-weight: 700; font-size: 0.8125rem; letter-spacing: 0.02em;
+      padding: 0.32rem 0.72rem; border-radius: 8px;
+      background: rgba(12,12,16,0.92);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+    }
+    .badge-price em {
+      font-style: normal; color: var(--red2); font-weight: 700;
+    }
+    .vcard-ph-free .badge-price {
+      background: rgba(34,158,217,0.18);
+      border-color: rgba(34,158,217,0.35);
+      color: #9fdcf7;
+    }
+    .badge-dur {
+      position: absolute; bottom: 10px; right: 10px; z-index: 3;
+      font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.03em;
+      padding: 0.28rem 0.5rem; border-radius: 6px;
+      background: rgba(0,0,0,0.78);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #f5f5f7;
+      font-variant-numeric: tabular-nums;
+    }
+    .load-ov {
+      position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; background: rgba(0,0,0,0.68); color: #fff;
+      font-size: 0.72rem; font-weight: 700;
+    }
+    .load-ov[hidden] { display: none !important; }
+    .vcard-body {
+      padding: 1rem 1.125rem 1.125rem; flex: 1; display: flex; flex-direction: column;
+      gap: 0.55rem;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    .vcard-title {
+      font-weight: 600; font-size: 0.9375rem; line-height: 1.35; min-height: 2.6rem;
+      letter-spacing: -0.02em;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+      color: #f4f4f6;
+    }
+    .vcard-trust {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem;
+      font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.04em;
+      text-transform: uppercase; color: rgba(158,151,168,0.95);
+    }
+    .vcard-trust-item { display: inline-flex; align-items: center; gap: 0.28rem; }
+    .vcard-trust-dot { opacity: 0.45; user-select: none; }
+    .vcard-meta {
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 0.65rem;
+      font-size: 0.75rem; color: var(--muted);
+      padding-top: 0.125rem;
+    }
+    .vcard-meta-item {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      font-variant-numeric: tabular-nums;
+      min-width: 0;
+    }
+    .vcard-meta svg { flex-shrink: 0; opacity: 0.55; }
+    .btn-row { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.15rem; }
+    .btn {
+      font-family: inherit; font-weight: 700; font-size: 0.8rem; border-radius: 10px;
+      padding: 0.58rem 0.875rem; cursor: pointer; border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.03); color: #e8e6ec; text-align: center; text-decoration: none;
+      transition: background 0.18s, border-color 0.18s, color 0.18s;
+    }
+    .btn:hover {
+      background: rgba(255,255,255,0.065);
+      border-color: rgba(255,255,255,0.12);
+      color: #fff;
+    }
+    .btn-primary {
+      background: linear-gradient(180deg, var(--red) 0%, #bc141c 100%);
+      color: #fff;
+      border-color: rgba(0,0,0,0.2);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset;
+    }
+    .btn-primary:hover {
+      filter: brightness(1.06);
+      border-color: rgba(0,0,0,0.28);
+      color: #fff;
+    }
+    .price-row {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
+      margin-top: 0.2rem;
+      padding-top: 0.65rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .price-row-label { font-size: 0.7rem; font-weight: 600; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+    .price-row-amt {
+      font-size: 1.125rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: #fff;
+      font-variant-numeric: tabular-nums;
+    }
+    .price-row-amt small { font-size: 0.82rem; font-weight: 600; opacity: 0.75; margin-left: 0.15rem; }
+    .ph-card .vcard-title { color: #666; font-family: ui-monospace, monospace; font-size: 0.75rem; word-break: break-all; }
+    /**
+     * Closed <dialog> must stay display:none — never set display:flex on dialog without [open],
+     * or the panel stays visible on the page even though showModal() was never called.
+     * Do not use transform on open dialog: in Chromium it can break top-layer stacking.
+     */
+    dialog.dlg-modal:not([open]) {
+      display: none !important;
+    }
+    dialog.dlg-modal[open] {
+      border: none;
+      border-radius: 18px;
+      max-width: min(440px, calc(100vw - 2rem));
+      width: min(440px, calc(100vw - 2rem));
+      max-height: min(90vh, 720px);
+      height: fit-content;
+      margin: auto;
+      padding: 0;
+      position: fixed;
+      inset: 0;
+      z-index: 2147483647;
+      background: linear-gradient(165deg, #141418 0%, #0c0c10 45%, #09090c 100%);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.09);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.4), 0 28px 80px rgba(0,0,0,0.75), 0 0 100px rgba(227,27,35,0.06);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    dialog.dlg-modal::backdrop {
+      background: rgba(4,4,8,0.78);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    /** While a modal is open, hide card overlays so nothing leaks above the dialog in any browser. */
+    body.modal-dlg-open .vcard:not(.ph-card) .play-hit,
+    body.modal-dlg-open .vcard:not(.ph-card) .badge-dur,
+    body.modal-dlg-open .vcard:not(.ph-card) .badge-price,
+    body.modal-dlg-open .vcard:not(.ph-card) .grad-over,
+    body.modal-dlg-open .vcard:not(.ph-card) .load-ov {
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+    body.modal-dlg-open .vcard:not(.ph-card) .js-video-wrap:not([hidden]) {
+      visibility: hidden !important;
+    }
+    .dlg-h {
+      flex-shrink: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.1rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: rgba(0,0,0,0.2);
+    }
+    .dlg-h strong { font-size: 0.9375rem; font-weight: 700; letter-spacing: -0.02em; color: #fafafa; }
+    .dlg-b {
+      padding: 1.15rem 1.25rem 1.25rem;
+      font-size: 0.875rem;
+      color: var(--muted);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .dlg-x {
+      width: 2rem; height: 2rem; border-radius: 8px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #c8c4ce; font-size: 1.15rem; line-height: 1; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s, color 0.15s;
+    }
+    .dlg-x:hover { background: rgba(255,255,255,0.09); color: #fff; }
+    .pay-summary {
+      text-align: center;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .pay-summary-title { font-size: 0.9375rem; font-weight: 600; color: #f4f4f6; line-height: 1.35; margin-bottom: 0.35rem; }
+    .pay-summary-price { font-size: 1.35rem; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+    .pay-summary-price small { font-size: 0.75rem; font-weight: 600; opacity: 0.65; margin-left: 0.25rem; color: #b0aab8; }
+    .pay-note {
+      padding: 0.7rem 0.85rem; border-radius: 10px; margin-bottom: 1rem;
+      font-size: 0.75rem; font-weight: 600; line-height: 1.45; color: #e8dfe0;
+      background: rgba(227,27,35,0.1); border: 1px solid rgba(227,27,35,0.28);
+    }
+    .pay-section { margin-bottom: 1.1rem; }
+    .pay-section:last-child { margin-bottom: 0; }
+    .pay-section-title {
+      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #8a8494; margin-bottom: 0.55rem;
+    }
+    .pay-section-hint {
+      font-size: 0.75rem; color: #8f8898; line-height: 1.45; margin-bottom: 0.65rem;
+    }
+    .btn-block { width: 100%; display: block; box-sizing: border-box; }
+    .pay-actions { display: flex; flex-direction: column; gap: 0.45rem; }
+    .crypto-row {
+      display: flex; flex-direction: column; gap: 0.4rem;
+      padding: 0.75rem 0.85rem;
+      margin-bottom: 0.5rem;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.28);
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+    .crypto-row:last-child { margin-bottom: 0; }
+    .crypto-row-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .crypto-label { font-size: 0.8125rem; font-weight: 700; color: #eceaf0; letter-spacing: 0.02em; }
+    .crypto-addr {
+      font-family: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+      font-size: 0.6875rem; line-height: 1.45; word-break: break-all; color: #c5bfd0;
+      user-select: all;
+    }
+    .btn-copy {
+      flex-shrink: 0;
+      font-family: inherit; font-size: 0.6875rem; font-weight: 700;
+      padding: 0.28rem 0.55rem; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #e2dfe8; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn-copy:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.18); }
+    .btn-ghost {
+      background: rgba(255,255,255,0.04) !important;
+      border-color: rgba(255,255,255,0.1) !important;
+      color: #ddd9e3 !important;
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.08) !important;
+      border-color: rgba(255,255,255,0.14) !important;
+    }
+    footer { text-align: center; padding: 2rem 1rem; font-size: 0.72rem; color: #666; }
+    .nav-top { display: flex; justify-content: flex-end; padding: 0.5rem 0; }
+    .nav-top a { color: #229ed9; font-weight: 700; text-decoration: none; font-size: 0.78rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="nav-top"><a id="nav-tg" href="#" target="_blank" rel="noopener">Telegram</a></div>
+
+    <div class="hero">
+      <div class="hero-over">PREMIUM FOLDERS</div>
+      <h2 id="video-list-title">Premium Collection</h2>
+      <p>VIP channels and groups with daily updates. Catalog syncs from Supabase; previews use signed Wasabi URLs like the main app.</p>
+      <div class="chips">
+        <span class="chip" id="chip-online">● 0 BUYING NOW</span>
+        <span class="chip">⚡ ONLINE</span>
+        <span class="chip">👤 1,240+ SOLD</span>
+      </div>
+    </div>
+
+    <div id="pay-cancel" class="alert" role="status" hidden>Payment cancelled. No charges were made.</div>
+    <div id="err-banner" class="alert err" role="alert" hidden></div>
+
+    <div class="toolbar">
+      <h1 id="grid-heading">Videos</h1>
+      <span class="chip" id="hydrate-chip" hidden style="align-self:flex-start">Updating full data…</span>
+      <input type="search" class="search" id="search" placeholder="Find folders, vip, premium…" autocomplete="off">
+    </div>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <dialog id="dlg-details" class="dlg-modal">
+    <div class="dlg-h"><strong id="dlg-d-title">Details</strong><button type="button" class="dlg-x" data-close="d" aria-label="Close">×</button></div>
+    <div class="dlg-b" id="dlg-d-body"></div>
+  </dialog>
+
+  <dialog id="dlg-pay" class="dlg-modal" aria-labelledby="dlg-pay-heading">
+    <div class="dlg-h"><strong id="dlg-pay-heading">Checkout</strong><button type="button" class="dlg-x" data-close="p" aria-label="Close">×</button></div>
+    <div class="dlg-b">
+      <div class="pay-summary" id="dlg-pay-summary" aria-live="polite"></div>
+      <div class="pay-note">Card checkout uses a neutral product name on your statement. Access is granted after payment confirmation.</div>
+
+      <div class="pay-section">
+        <div class="pay-section-title">Card &amp; digital wallets</div>
+        <div class="pay-actions">
+          <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px" id="btn-payjsr">Continue with card</button>
+          <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px" id="btn-paypp">PayPal or card</button>
+        </div>
+      </div>
+
+      <div class="pay-section" id="dlg-pay-crypto-section" hidden>
+        <div class="pay-section-title">Cryptocurrency</div>
+        <p class="pay-section-hint">Send the USD equivalent for this item to one of the addresses below. Include your transaction hash when you message us so we can match your payment.</p>
+        <div id="dlg-pay-crypto-list"></div>
+        <a class="btn btn-block btn-ghost" style="margin-top:0.65rem;padding:0.72rem 1rem;border-radius:12px;text-decoration:none" id="dlg-pay-crypto-tg" href="#" target="_blank" rel="noopener">Send proof via Telegram</a>
+      </div>
+    </div>
+  </dialog>
+
+  <footer>© {{SITE_NAME}} · Supabase + Wasabi</footer>
+
+  <script>
+    (function () {
+      var PREVIEW_EV = 'video-card-preview-change';
+      var EBOOKS_ORIGIN = '{{EBOOKS_SITE_URL}}';
+      var TG_ENV = '{{TELEGRAM_USERNAME}}'.replace(/^@/, '').trim();
+      var activePreviewId = null;
+      var MASK_NAMES = [
+        'Personal Development Ebook', 'Financial Freedom Ebook', 'Digital Marketing Guide',
+        'Health & Wellness Ebook', 'Productivity Masterclass', 'Mindfulness & Meditation Guide',
+        'Entrepreneurship Blueprint'
+      ];
+
+      function shuffle(arr) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = a[i]; a[i] = a[j]; a[j] = t;
+        }
+        return a;
+      }
+
+      function normalizeOrigin(u) {
+        try { return new URL(u).origin; } catch (e) { return ''; }
+      }
+
+      function formatDuration(d) {
+        if (d == null || d === '') return '';
+        if (typeof d === 'number' && !isNaN(d)) {
+          var sec = Math.max(0, Math.round(Number(d)));
+          var m = Math.floor(sec / 60),
+            s = sec % 60;
+          return m + 'min ' + s + 's';
+        }
+        var parts = String(d).split(':');
+        if (parts.length === 2) {
+          var mm = parseInt(parts[0], 10) || 0,
+            ss = Math.round(parseFloat(parts[1]) || 0);
+          return mm + 'min ' + ss + 's';
+        }
+        if (parts.length === 3) {
+          var h = parseInt(parts[0], 10) || 0,
+            mm2 = parseInt(parts[1], 10) || 0,
+            ss2 = Math.round(parseFloat(parts[2]) || 0);
+          return h + 'h ' + mm2 + 'm ' + ss2 + 's';
+        }
+        return String(d);
+      }
+
+      function formatViews(v) {
+        v = Number(v) || 0;
+        if (v < 1000) return v + ' views';
+        if (v < 1e6) return (v / 1000).toFixed(1) + 'K views';
+        return (v / 1e6).toFixed(1) + 'M views';
+      }
+
+      function formatDateRel(iso) {
+        if (!iso) return '';
+        var date = new Date(iso), now = new Date();
+        var diff = Math.ceil(Math.abs(now - date) / (864e5));
+        if (diff <= 1) return 'Yesterday';
+        if (diff < 7) return diff + ' days ago';
+        if (diff < 30) return Math.floor(diff / 7) + ' weeks ago';
+        if (diff < 365) return Math.floor(diff / 30) + ' months ago';
+        return Math.floor(diff / 365) + ' years ago';
+      }
+
+      async function fetchSigned(fileKey) {
+        if (!fileKey) return null;
+        var r = await fetch('/api/signed-url?key=' + encodeURIComponent(String(fileKey).trim()));
+        if (!r.ok) return null;
+        var j = await r.json();
+        return j.success && j.url ? j.url : null;
+      }
+
+      function checkoutUrl(price, maskedName, displayTitle, method, videoId) {
+        var origin = normalizeOrigin(String(EBOOKS_ORIGIN || '').trim().replace(/\/+$/, ''));
+        if (!origin) return null;
+        method = (method || 'payjsr').toLowerCase();
+        var vid = videoId || '';
+        if (method === 'payjsr') {
+          var p = new URLSearchParams();
+          p.set('amount', String(price));
+          p.set('currency', 'USD');
+          p.set('product_name', maskedName || 'Premium Digital Content');
+          p.set('display_title', displayTitle || maskedName);
+          p.set('method', 'payjsr');
+          if (vid) p.set('video_id', vid);
+          return origin + '/api/paypal-checkout?' + p.toString();
+        }
+        var successUrl = window.location.origin + window.location.pathname + '?paid=1&video_id=' + encodeURIComponent(vid);
+        var cancelUrl = window.location.origin + window.location.pathname + '?payment_canceled=true';
+        var p2 = new URLSearchParams();
+        p2.set('amount', String(price));
+        p2.set('currency', 'USD');
+        p2.set('success_url', successUrl);
+        p2.set('cancel_url', cancelUrl);
+        p2.set('product_name', maskedName || MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)]);
+        p2.set('display_title', displayTitle || 'Digital purchase');
+        p2.set('method', 'paypal');
+        if (vid) p2.set('video_id', vid);
+        return origin + '/api/paypal-checkout?' + p2.toString();
+      }
+
+      function tgUrlForVideo(v, tgUser) {
+        var msg =
+          '🎬 **' + v.title + '**\n\n' +
+          '💰 **Price:** $' + Number(v.price).toFixed(2) + '\n' +
+          '⏱️ **Duration:** ' + (formatDuration(v.duration) || '—') + '\n' +
+          '👀 **Views:** ' + formatViews(v.views) + '\n' +
+          '📅 **Added:** ' + formatDateRel(v.created_at) + '\n\n' +
+          '📝 **Description:**\n' + (v.description || 'No description') + '\n\n' +
+          'Please let me know how to proceed with payment.';
+        var enc = encodeURIComponent(msg);
+        if (tgUser) return 'https://t.me/' + tgUser + '?text=' + enc;
+        return 'https://t.me/share/url?url=&text=' + enc;
+      }
+
+      function setErr(t) {
+        var el = document.getElementById('err-banner');
+        el.textContent = t || '';
+        el.hidden = !t;
+      }
+
+      function wireOnlineChip() {
+        var n = 40 + Math.floor(Math.random() * 80);
+        var el = document.getElementById('chip-online');
+        function tick() {
+          el.textContent = '● ' + n + ' BUYING NOW';
+          n = Math.max(12, n + (Math.random() > 0.5 ? 1 : -1));
+        }
+        tick();
+        setInterval(tick, 4000);
+      }
+
+      function parseUrlParams() {
+        var p = new URLSearchParams(window.location.search);
+        if (p.get('payment_canceled') === 'true') {
+          var b = document.getElementById('pay-cancel');
+          b.hidden = false;
+          setTimeout(function () {
+            b.hidden = true;
+            p.delete('payment_canceled');
+            var qs = p.toString();
+            history.replaceState({}, '', window.location.pathname + (qs ? '?' + qs : ''));
+          }, 8000);
+        }
+      }
+
+      var allVideos = [];
+      var tgUser = TG_ENV;
+      var payTarget = null;
+      var payCryptoWallets = [];
+
+      function copyToClipboard(text, btn) {
+        text = String(text || '');
+        if (btn && !btn.getAttribute('data-label')) {
+          btn.setAttribute('data-label', (btn.textContent || 'Copy').trim());
+        }
+        function done(ok) {
+          if (!btn) return;
+          btn.textContent = ok ? 'Copied' : 'Copy failed';
+          setTimeout(function () {
+            btn.textContent = btn.getAttribute('data-label') || 'Copy';
+          }, 1600);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { done(true); }).catch(function () { done(false); });
+          return;
+        }
+        try {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+          done(true);
+        } catch (e) {
+          done(false);
+        }
+      }
+
+      function tgUrlCryptoProof(v, tgUser, wallets) {
+        var lines = (wallets || []).map(function (w) {
+          return '• ' + String(w.label || w.symbol || 'Wallet').toUpperCase() + ': ' + String(w.address || '');
+        }).join('\n');
+        var msg =
+          '📦 **Order:** ' + v.title + '\n' +
+          '💵 **Amount:** $' + Number(v.price).toFixed(2) + ' USD (send the crypto equivalent)\n\n' +
+          '**Deposit addresses:**\n' + lines + '\n\n' +
+          'I will send my **transaction hash** after payment.';
+        var enc = encodeURIComponent(msg);
+        if (tgUser) return 'https://t.me/' + tgUser + '?text=' + enc;
+        return 'https://t.me/share/url?url=&text=' + enc;
+      }
+
+      function filterList(q) {
+        q = String(q || '').trim().toLowerCase();
+        if (!q) return allVideos;
+        return allVideos.filter(function (v) {
+          return (v.title || '').toLowerCase().indexOf(q) >= 0 ||
+            (v.description || '').toLowerCase().indexOf(q) >= 0;
+        });
+      }
+
+      function renderGrid(list, isPlaceholder) {
+        var g = document.getElementById('grid');
+        g.innerHTML = '';
+        list.forEach(function (v) {
+          var el = document.createElement('article');
+          el.className = 'vcard' + (isPlaceholder ? ' ph-card' : '') + (!isPlaceholder && isFree ? ' vcard-ph-free' : '');
+          el.dataset.id = v.id;
+          if (isPlaceholder) {
+            el.innerHTML =
+              '<div class="vcard-media"><div class="vcard-media-inner"><div class="skel"></div></div></div>' +
+              '<div class="vcard-body"><div class="vcard-title">' + escapeHtml(v.title) + '</div><div class="vcard-meta"><span>Loading…</span></div></div>';
+            g.appendChild(el);
+            return;
+          }
+
+          var price = Number(v.price) || 0;
+          var isFree = !!v.is_free;
+          var dur = formatDuration(v.duration);
+          var svgEye =
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+          var svgCal =
+            '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+          var trustLine = isFree
+            ? '<span class="vcard-trust-item">No payment</span><span class="vcard-trust-dot">·</span><span class="vcard-trust-item">Instant access</span>'
+            : '<span class="vcard-trust-item">Secure checkout</span><span class="vcard-trust-dot">·</span><span class="vcard-trust-item">Digital delivery</span>';
+          var metaDate = escapeHtml(formatDateRel(v.created_at)) || '—';
+          var badgeTop = isFree
+            ? '<span class="badge-price">Free</span>'
+            : '<span class="badge-price"><em>$</em>' + price.toFixed(2) + '</span>';
+          /** Only DB-hosted HTTPS thumbnails; Wasabi paths use signed URLs (private buckets break on plain path URLs). */
+          var httpPoster = '';
+          if (v.thumbnail_url && /^https?:\/\//i.test(String(v.thumbnail_url).trim())) {
+            httpPoster = String(v.thumbnail_url).trim();
+          }
+
+          el.innerHTML =
+            '<div class="vcard-media">' +
+              '<div class="vcard-media-inner js-inner">' +
+                '<div class="skel js-skel"></div>' +
+                '<img class="js-thumb" alt="" style="display:none" />' +
+                '<div class="js-video-wrap" hidden style="position:absolute;inset:0;z-index:6;background:#05000c">' +
+                  '<video class="js-vid" controls playsinline style="width:100%;height:100%;object-fit:cover"></video></div>' +
+                '<div class="grad-over"></div>' +
+                '<div class="play-hit js-play-hit"><div class="play-circ"><div class="play-tri"></div></div></div>' +
+                '<div class="load-ov js-load" hidden><span>Loading preview…</span></div>' +
+                badgeTop +
+                (dur ? '<span class="badge-dur">' + escapeHtml(dur) + '</span>' : '') +
+              '</div>' +
+            '</div>' +
+            '<div class="vcard-body">' +
+              '<div class="vcard-title">' + escapeHtml(v.title) + '</div>' +
+              '<div class="vcard-trust">' + trustLine + '</div>' +
+              '<div class="vcard-meta">' +
+                '<span class="vcard-meta-item">' + svgEye + formatViews(v.views) + '</span>' +
+                '<span class="vcard-meta-item" style="justify-content:flex-end;text-align:right">' + svgCal + metaDate + '</span>' +
+              '</div>' +
+              '<div class="btn-row">' +
+                '<button type="button" class="btn js-details">View details</button>' +
+                (isFree && v.product_link
+                  ? '<a class="btn btn-primary" href="' + escapeAttr(v.product_link) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Open product</a>'
+                  : (!isFree
+                    ? '<div style="display:flex;gap:0.4rem">' +
+                        '<a class="btn" style="flex:1" href="' + escapeAttr(tgUrlForVideo(v, tgUser) || '#') + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Contact</a>' +
+                        '<button type="button" class="btn btn-primary js-payopen" style="flex:1">Buy now</button>' +
+                      '</div>'
+                    : '')) +
+              '</div>' +
+              (!isFree
+                ? '<div class="price-row">' +
+                    '<span class="price-row-label">Total</span>' +
+                    '<span class="price-row-amt">$' + price.toFixed(2) + '<small>USD</small></span>' +
+                  '</div>'
+                : '') +
+            '</div>';
+
+          el.dataset.httpPoster = httpPoster;
+          el.dataset.thumbKey = v.wasabi_thumb_key || '';
+          el.dataset.videoKey = v.wasabi_video_key || '';
+          el.dataset.fallbackPlay =
+            v.public_video_url && /^https?:\/\//i.test(String(v.public_video_url).trim())
+              ? String(v.public_video_url).trim()
+              : ((v.playback_url && /^https?:\/\//i.test(v.playback_url)) ? v.playback_url : '');
+
+          el.setAttribute('aria-label', (v.title || 'Catalog item') + (isFree ? ', free' : ', ' + price.toFixed(2) + ' USD'));
+
+          el.addEventListener('click', function (e) {
+            if (e.target.closest('a, button, video')) return;
+            fetch('/api/videos/' + v.id + '/views', { method: 'POST' }).catch(function () {});
+          });
+
+          el.querySelector('.js-details').addEventListener('click', function (e) {
+            e.stopPropagation();
+            openDetails(v);
+          });
+          var po = el.querySelector('.js-payopen');
+          if (po) po.addEventListener('click', function (e) {
+            e.stopPropagation();
+            openPay(v);
+          });
+
+          wireCardMedia(el, v);
+          g.appendChild(el);
+        });
+
+        if (!isPlaceholder) hydrateThumbs();
+      }
+
+      function escapeHtml(s) {
+        return String(s == null ? '' : s)
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
+      }
+      function escapeAttr(s) { return escapeHtml(s).replace(/'/g, '&#39;'); }
+
+      function wireCardMedia(card, v) {
+        var playHit = card.querySelector('.js-play-hit');
+        var skel = card.querySelector('.js-skel');
+        var img = card.querySelector('.js-thumb');
+        var load = card.querySelector('.js-load');
+        var wrap = card.querySelector('.js-video-wrap');
+        var video = card.querySelector('.js-vid');
+
+        playHit.addEventListener('click', function (e) {
+          e.stopPropagation();
+          togglePreview(card, v, skel, img, load, wrap, video, playHit);
+        });
+      }
+
+      function togglePreview(card, v, skel, img, load, wrap, video, playHit) {
+        if (wrap.hidden) {
+          window.dispatchEvent(new CustomEvent(PREVIEW_EV, { detail: { id: v.id } }));
+          load.hidden = false;
+          var urlPromise;
+          if (card.dataset.fallbackPlay) urlPromise = Promise.resolve(card.dataset.fallbackPlay);
+          else if (card.dataset.videoKey) urlPromise = fetchSigned(card.dataset.videoKey);
+          else urlPromise = Promise.resolve(null);
+
+          urlPromise.then(function (url) {
+            load.hidden = true;
+            if (!url) return;
+            video.src = url;
+            wrap.hidden = false;
+            playHit.hidden = true;
+            skel.style.display = 'none';
+            img.style.display = 'none';
+            video.play().catch(function () {});
+          });
+        } else {
+          video.pause();
+          video.removeAttribute('src');
+          video.load();
+          wrap.hidden = true;
+          playHit.hidden = false;
+          img.style.display = img.src ? 'block' : 'none';
+          skel.style.display = img.src ? 'none' : 'block';
+        }
+      }
+
+      window.addEventListener(PREVIEW_EV, function (ev) {
+        var id = ev.detail && ev.detail.id;
+        document.querySelectorAll('.vcard').forEach(function (card) {
+          if (card.dataset.id === id) return;
+          var wrap = card.querySelector('.js-video-wrap');
+          var vid = card.querySelector('.js-vid');
+          var ph = card.querySelector('.js-play-hit');
+          var sk = card.querySelector('.js-skel');
+          var im = card.querySelector('.js-thumb');
+          if (wrap && !wrap.hidden) {
+            vid.pause(); vid.removeAttribute('src'); vid.load();
+            wrap.hidden = true;
+            if (ph) ph.hidden = false;
+            if (im && im.src) { im.style.display = 'block'; if (sk) sk.style.display = 'none'; }
+          }
+        });
+      });
+
+      function hydrateThumbs() {
+        document.querySelectorAll('.vcard:not(.ph-card)').forEach(function (card) {
+          var skel = card.querySelector('.js-skel');
+          var img = card.querySelector('.js-thumb');
+          var http = card.dataset.httpPoster;
+          function trySignedThumb() {
+            var k = card.dataset.thumbKey;
+            if (!k) {
+              skel.style.display = 'none';
+              return;
+            }
+            fetchSigned(k).then(function (u) {
+              if (!u) {
+                skel.style.display = 'none';
+                return;
+              }
+              img.onload = function () { skel.style.display = 'none'; img.style.display = 'block'; };
+              img.onerror = function () { skel.style.display = 'none'; };
+              img.src = u;
+            });
+          }
+          if (http) {
+            img.onload = function () { skel.style.display = 'none'; img.style.display = 'block'; };
+            img.onerror = function () { trySignedThumb(); };
+            img.src = http;
+            return;
+          }
+          trySignedThumb();
+        });
+      }
+
+      function syncModalBodyClass() {
+        var d1 = document.getElementById('dlg-details');
+        var d2 = document.getElementById('dlg-pay');
+        var open = (d1 && d1.open) || (d2 && d2.open);
+        document.body.classList.toggle('modal-dlg-open', !!open);
+      }
+
+      function openDetails(v) {
+        var d = document.getElementById('dlg-details');
+        document.body.classList.add('modal-dlg-open');
+        document.getElementById('dlg-d-title').textContent = v.title;
+        document.getElementById('dlg-d-body').innerHTML =
+          '<p style="margin-bottom:0.75rem;line-height:1.55;color:#dcd8e0">' + escapeHtml(v.description || 'No description available') + '</p>' +
+          '<div style="display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.75rem">' +
+          '<span class="chip">' + escapeHtml('Views: ' + formatViews(v.views)) + '</span>' +
+          '<span class="chip">' + escapeHtml('Added: ' + formatDateRel(v.created_at)) + '</span>' +
+          (v.duration ? '<span class="chip">' + escapeHtml('Duration: ' + formatDuration(v.duration)) + '</span>' : '') +
+          '</div>' +
+          (!v.is_free
+            ? '<div class="price-row" style="border-top:none;padding-top:0;margin-top:0;margin-bottom:0.75rem">' +
+              '<span class="price-row-label">Price</span>' +
+              '<span class="price-row-amt">$' + Number(v.price).toFixed(2) + '<small>USD</small></span>' +
+              '</div>'
+            : '') +
+          '<p style="font-size:0.72rem;color:#888;margin-bottom:0.65rem;line-height:1.45">' +
+          'Payments use industry-standard processors. Charges appear under a neutral descriptor on your statement.</p>' +
+          '<div style="margin-top:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap">' +
+          '<a class="btn" href="' + escapeAttr(tgUrlForVideo(v, tgUser) || '#') + '" target="_blank">Contact</a>' +
+          (!v.is_free ? '<button type="button" class="btn btn-primary js-dpay">Continue to payment</button>' : '') +
+          '</div>';
+        var bp = d.querySelector('.js-dpay');
+        if (bp) bp.addEventListener('click', function () { d.close(); openPay(v); });
+        d.showModal();
+        syncModalBodyClass();
+      }
+
+      function openPay(v) {
+        payTarget = v;
+        document.body.classList.add('modal-dlg-open');
+        var sum = document.getElementById('dlg-pay-summary');
+        sum.innerHTML =
+          '<div class="pay-summary-title">' + escapeHtml(v.title) + '</div>' +
+          '<div class="pay-summary-price">$' + Number(v.price).toFixed(2) + '<small>USD</small></div>';
+
+        var sec = document.getElementById('dlg-pay-crypto-section');
+        var list = document.getElementById('dlg-pay-crypto-list');
+        var tgL = document.getElementById('dlg-pay-crypto-tg');
+
+        if (payCryptoWallets.length) {
+          sec.hidden = false;
+          list.innerHTML = payCryptoWallets
+            .map(function (w) {
+              return (
+                '<div class="crypto-row">' +
+                '<div class="crypto-row-head">' +
+                '<span class="crypto-label">' + escapeHtml(w.label || w.symbol || 'Wallet') + '</span>' +
+                '<button type="button" class="btn-copy js-cp" data-addr="' + escapeAttr(w.address) + '">Copy</button>' +
+                '</div>' +
+                '<div class="crypto-addr">' + escapeHtml(w.address) + '</div>' +
+                '</div>'
+              );
+            })
+            .join('');
+          list.onclick = function (e) {
+            var b = e.target.closest('.js-cp');
+            if (!b || !list.contains(b)) return;
+            e.preventDefault();
+            copyToClipboard(b.getAttribute('data-addr'), b);
+          };
+          tgL.href = tgUrlCryptoProof(v, tgUser, payCryptoWallets);
+        } else {
+          sec.hidden = true;
+          list.innerHTML = '';
+          list.onclick = null;
+          tgL.href = '#';
+        }
+
+        document.getElementById('dlg-pay').showModal();
+        syncModalBodyClass();
+      }
+
+      document.getElementById('dlg-details').addEventListener('close', syncModalBodyClass);
+      document.getElementById('dlg-pay').addEventListener('close', syncModalBodyClass);
+
+      document.querySelector('#dlg-details .dlg-x').addEventListener('click', function () {
+        document.getElementById('dlg-details').close();
+      });
+      document.querySelector('#dlg-pay .dlg-x').addEventListener('click', function () {
+        document.getElementById('dlg-pay').close();
+      });
+
+      document.getElementById('btn-payjsr').addEventListener('click', function () {
+        if (!payTarget) return;
+        var masked = payTarget.masked_product_name || 'Premium Digital Content';
+        var u = checkoutUrl(payTarget.price, masked, payTarget.title, 'payjsr', payTarget.id);
+        if (u) window.location.href = u;
+      });
+      document.getElementById('btn-paypp').addEventListener('click', function () {
+        if (!payTarget) return;
+        var masked = MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)];
+        var u = checkoutUrl(payTarget.price, masked, payTarget.title, 'paypal', payTarget.id);
+        if (u) window.location.href = u;
+      });
+
+      document.getElementById('search').addEventListener('input', function () {
+        renderGrid(filterList(this.value), false);
+      });
+
+      async function boot() {
+        parseUrlParams();
+        wireOnlineChip();
+        EBOOKS_ORIGIN = normalizeOrigin(EBOOKS_ORIGIN || '');
+        var hints = [];
+        if (!EBOOKS_ORIGIN) {
+          hints.push('Set EBOOKS_SITE_URL or VITE_CHECKOUT_URL for checkout redirects.');
+        }
+        try {
+          var hc = await fetch('/api/health').then(function (x) { return x.json(); });
+          if (!hc.wasabi_signed_urls) {
+            hints.push(
+              'Wasabi signing is off: set VITE_WASABI_ACCESS_KEY + VITE_WASABI_SECRET_KEY + VITE_WASABI_BUCKET + VITE_WASABI_REGION + VITE_WASABI_ENDPOINT on this service, or store wasabi_config in Supabase site_config.'
+            );
+          }
+        } catch (e2) {}
+        if (hints.length) setErr(hints.join(' '));
+
+        try {
+          var br = await fetch('/api/site-brief').then(function (r) { return r.json(); });
+          if (br.video_list_title) {
+            document.getElementById('video-list-title').textContent = br.video_list_title;
+            document.getElementById('grid-heading').textContent = br.video_list_title;
+          }
+          if (br.telegram_username) tgUser = br.telegram_username.replace(/^@/, '');
+          if (Array.isArray(br.crypto_wallets)) payCryptoWallets = br.crypto_wallets;
+        } catch (e) {}
+
+        var nav = document.getElementById('nav-tg');
+        if (tgUser) nav.href = 'https://t.me/' + tgUser;
+        else { nav.href = '#'; nav.style.opacity = '0.4'; }
+
+        var idsRes = await fetch('/api/video-ids');
+        var idsJs = idsRes.ok ? await idsRes.json() : { ids: [] };
+        var ids = shuffle(idsJs.ids || []);
+        if (ids.length) {
+          renderGrid(ids.map(function (id) { return { id: id, title: id }; }), true);
+        }
+
+        document.getElementById('hydrate-chip').hidden = false;
+        var vidRes = await fetch('/api/videos');
+        document.getElementById('hydrate-chip').hidden = true;
+        if (!vidRes.ok) {
+          var er = await vidRes.json().catch(function () { return {}; });
+          setErr(er.error || 'Failed to load videos');
+          return;
+        }
+        var pack = await vidRes.json();
+        allVideos = shuffle(pack.videos || []);
+        renderGrid(allVideos, false);
+      }
+
+      boot().catch(function (e) {
+        setErr((e && e.message) || 'Catalog failed to load');
+        document.getElementById('hydrate-chip').hidden = true;
+      });
+    })();
+  </script>
+</body>
+</html>
