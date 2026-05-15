@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch · {{SITE_NAME}}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #10b981;
+      --primary-light: #34d399;
+      --primary-deep: #059669;
+      --accent: #38bdf8;
+      --accent-gold: #fbbf24;
+      --bg: #0b1220;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --stroke: rgba(148, 163, 184, 0.14);
+      --red: var(--primary-deep);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { color-scheme: dark; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 100% 60% at 50% -20%, rgba(16, 185, 129, 0.09), transparent),
+        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(56, 189, 248, 0.06), transparent);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 1.25rem; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .topbar a {
+      color: var(--accent); font-weight: 700; text-decoration: none; font-size: 0.82rem;
+      padding: 0.45rem 0.85rem; border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.35); background: rgba(15, 23, 42, 0.95);
+    }
+    .topbar a:hover { border-color: var(--accent); color: #fff; }
+    .layout { display: grid; gap: 1.25rem; }
+    @media (min-width: 960px) {
+      .layout { grid-template-columns: 1fr 340px; align-items: start; }
+    }
+    .player-wrap {
+      border-radius: 18px; overflow: hidden;
+      background: #111827;
+      border: 1px solid var(--stroke);
+      box-shadow: 0 18px 48px rgba(0,0,0,0.45);
+    }
+    .player-aspect { position: relative; width: 100%; padding-top: 56.25%; background: #0f172a; }
+    .player-aspect video, .player-aspect .skel {
+      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; display: block;
+    }
+    .skel {
+      background: linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+      background-size: 200% 100%; animation: sh 1.2s ease-in-out infinite;
+    }
+    @keyframes sh { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+    .player-meta { padding: 1.1rem 1.25rem 1.25rem; }
+    .player-meta h1 { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 0.5rem; }
+    .player-meta p { color: var(--muted); font-size: 0.88rem; line-height: 1.55; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .chip {
+      font-size: 0.68rem; font-weight: 800; padding: 0.32rem 0.65rem; border-radius: 999px;
+      background: rgba(30, 41, 59, 0.92); color: #a7f3d0; border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .pay-panel {
+      border-radius: 18px;
+      background: linear-gradient(165deg, #151d2e 0%, #111827 55%, #0f172a 100%);
+      border: 1px solid var(--stroke);
+      padding: 1.15rem 1.2rem 1.25rem;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.4);
+    }
+    .pay-panel h2 { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.35rem; }
+    .pay-price { font-size: 1.65rem; font-weight: 800; color: #fff; margin-bottom: 0.75rem; }
+    .pay-price small { font-size: 0.8rem; opacity: 0.7; margin-left: 0.2rem; }
+    .pay-note {
+      font-size: 0.72rem; font-weight: 600; line-height: 1.45; color: #d1fae5;
+      background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.28);
+      border-radius: 10px; padding: 0.65rem 0.75rem; margin-bottom: 0.9rem;
+    }
+    .pay-section { margin-bottom: 0.95rem; }
+    .pay-section-title {
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #8a8494; margin-bottom: 0.5rem;
+    }
+    .btn {
+      font-family: inherit; font-weight: 700; font-size: 0.8rem; border-radius: 10px;
+      padding: 0.62rem 0.875rem; cursor: pointer; border: 1px solid var(--stroke);
+      background: rgba(255,255,255,0.03); color: #e8e6ec; text-align: center; text-decoration: none;
+      display: block; width: 100%; transition: background 0.18s, border-color 0.18s;
+    }
+    .btn:hover { background: rgba(255,255,255,0.065); color: #fff; }
+    .btn-primary {
+      background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary-deep) 100%);
+      color: #fff; border-color: rgba(5, 150, 105, 0.5);
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+    }
+    .btn-primary:hover { filter: brightness(1.06); color: #fff; }
+    .btn-tg { background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.35); color: #7dd3fc; margin-top: 0.4rem; }
+    .pay-actions { display: flex; flex-direction: column; gap: 0.4rem; }
+    .crypto-row {
+      padding: 0.65rem 0.75rem; margin-bottom: 0.45rem; border-radius: 10px;
+      background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.07);
+    }
+    .crypto-row-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; }
+    .crypto-label { font-size: 0.78rem; font-weight: 700; }
+    .crypto-addr { font-family: ui-monospace, monospace; font-size: 0.65rem; word-break: break-all; color: #c5bfd0; }
+    .btn-copy {
+      font-size: 0.65rem; font-weight: 700; padding: 0.25rem 0.5rem; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: #e2dfe8; cursor: pointer;
+    }
+    .alert {
+      padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1rem;
+      background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: #bae6fd;
+    }
+    .alert.err { background: rgba(248, 113, 113, 0.1); border-color: rgba(248, 113, 113, 0.35); color: #fecaca; }
+    .state-box { text-align: center; padding: 3rem 1.5rem; color: var(--muted); }
+    footer { text-align: center; padding: 2rem 1rem; font-size: 0.72rem; color: #64748b; }
+    .purchase-toast {
+      position: fixed; left: 1rem; bottom: 1rem; z-index: 99990;
+      max-width: min(340px, calc(100vw - 2rem));
+      display: flex; align-items: flex-start; gap: 0.65rem;
+      padding: 0.85rem 1rem; border-radius: 14px;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+      transform: translateY(120%); opacity: 0;
+      transition: transform 0.45s var(--ease), opacity 0.45s var(--ease);
+      pointer-events: none;
+    }
+    .purchase-toast.show { transform: translateY(0); opacity: 1; }
+    .purchase-toast.hide { transform: translateY(12px); opacity: 0; }
+    .purchase-toast-dot {
+      flex-shrink: 0; width: 10px; height: 10px; margin-top: 0.35rem; border-radius: 50%;
+      background: var(--primary); box-shadow: 0 0 12px var(--primary);
+      animation: pulse-dot 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+    .purchase-toast-body { flex: 1; min-width: 0; font-size: 0.78rem; line-height: 1.45; color: #cbd5e1; }
+    .purchase-toast-who { display: block; font-weight: 800; color: #f8fafc; margin-bottom: 0.15rem; }
+    .purchase-toast-msg em { font-style: normal; color: var(--accent-gold); font-weight: 800; }
+    .purchase-toast-time { flex-shrink: 0; font-size: 0.62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <a href="/">← Back to catalog</a>
+      <a id="nav-tg" href="#" target="_blank" rel="noopener">Telegram</a>
+    </div>
+
+    <div id="pay-cancel" class="alert" role="status" hidden>Payment cancelled. No charges were made.</div>
+    <div id="err-banner" class="alert err" role="alert" hidden></div>
+
+    <div id="loading-state" class="state-box">Loading video…</div>
+    <div id="error-state" class="state-box" hidden>Video not found. <a href="/" style="color:#34d399">Return home</a></div>
+
+    <div id="watch-layout" class="layout" hidden>
+      <div>
+        <div class="player-wrap">
+          <div class="player-aspect">
+            <div class="skel" id="player-skel"></div>
+            <video id="player-video" controls playsinline preload="metadata" hidden></video>
+          </div>
+          <div class="player-meta">
+            <h1 id="v-title">—</h1>
+            <p id="v-desc"></p>
+            <div class="chips" id="v-chips"></div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="pay-panel" id="pay-panel">
+        <h2>Unlock access</h2>
+        <p class="pay-price" id="v-price">—</p>
+        <p class="pay-note">
+          <strong>Pay instantly:</strong> You receive access automatically after payment. Discreet name on your statement.
+          <span style="display:block;margin-top:0.45rem"><strong>Crypto:</strong> Send below, then payment proof on Telegram.</span>
+        </p>
+        <div class="pay-section">
+          <p class="pay-section-title">Card &amp; digital wallets</p>
+          <div class="pay-actions">
+            <button type="button" class="btn btn-primary" id="btn-paypal">Pay instantly</button>
+          </div>
+        </div>
+        <div class="pay-section" id="crypto-section" hidden>
+          <p class="pay-section-title">Cryptocurrency</p>
+          <p style="font-size:0.75rem;color:#94a3b8;line-height:1.45;margin-bottom:0.65rem">Send crypto, then message us on Telegram with your transaction hash.</p>
+          <div id="crypto-list"></div>
+          <a class="btn btn-tg" id="crypto-tg" href="#" target="_blank" rel="noopener">Send proof via Telegram</a>
+        </div>
+        <div class="pay-section">
+          <p class="pay-section-title">Need help?</p>
+          <a class="btn btn-tg" id="btn-contact-tg" href="#" target="_blank" rel="noopener">Contact on Telegram</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <footer>© {{SITE_NAME}}</footer>
+
+  <div id="purchase-toast" class="purchase-toast" hidden role="status" aria-live="polite">
+    <span class="purchase-toast-dot" aria-hidden="true"></span>
+    <div class="purchase-toast-body">
+      <strong class="purchase-toast-who"></strong>
+      <span class="purchase-toast-msg"></span>
+    </div>
+    <span class="purchase-toast-time">just now</span>
+  </div>
+
+  <script>
+    (function () {
+      var EBOOKS_ORIGIN = '{{EBOOKS_SITE_URL}}';
+      var TG_ENV = '{{TELEGRAM_USERNAME}}'.replace(/^@/, '').trim();
+      var MASK_NAMES = ['Personal Development Ebook', 'Financial Freedom Ebook', 'Digital Marketing Guide', 'Health & Wellness Ebook', 'Productivity Masterclass', 'Mindfulness & Meditation Guide', 'Entrepreneurship Blueprint'];
+      var PURCHASE_TOAST_MS = 78000;
+      var purchaseToastTimer = null;
+      var toastVideos = [];
+      var currentVideo = null;
+      var tgUser = TG_ENV;
+      var cryptoWallets = [];
+
+      function normalizeOrigin(u) { try { return new URL(u).origin; } catch (e) { return ''; } }
+      function getVideoId() { var p = new URLSearchParams(window.location.search); return (p.get('id') || p.get('video_id') || '').trim(); }
+      function formatDuration(d) {
+        if (d == null || d === '') return '';
+        if (typeof d === 'number' && !isNaN(d)) { var sec = Math.max(0, Math.round(Number(d))); return Math.floor(sec / 60) + 'min ' + (sec % 60) + 's'; }
+        return String(d);
+      }
+      function formatViews(v) { v = Number(v) || 0; if (v < 1000) return v + ' views'; if (v < 1e6) return (v / 1000).toFixed(1) + 'K views'; return (v / 1e6).toFixed(1) + 'M views'; }
+      async function fetchSigned(fileKey) {
+        if (!fileKey) return null;
+        var r = await fetch('/api/signed-url?key=' + encodeURIComponent(String(fileKey).trim()));
+        if (!r.ok) return null;
+        var j = await r.json();
+        return j.success && j.url ? j.url : null;
+      }
+      function ebooksSuccessUrl(price, displayTitle, videoId) {
+        var origin = normalizeOrigin(String(EBOOKS_ORIGIN || '').trim().replace(/\/+$/, ''));
+        if (!origin) return null;
+        var params = new URLSearchParams();
+        params.set('status', 'success');
+        params.set('product_name', displayTitle || 'Digital purchase');
+        params.set('amount', String(price));
+        if (videoId) params.set('video_id', String(videoId));
+        var tg = (tgUser || TG_ENV || '').replace(/^@/, '').trim();
+        if (tg) params.set('telegram_username', tg);
+        return origin + '/?' + params.toString();
+      }
+      function checkoutUrl(price, maskedName, displayTitle, videoId, method) {
+        var origin = normalizeOrigin(String(EBOOKS_ORIGIN || '').trim().replace(/\/+$/, ''));
+        if (!origin) return null;
+        var successUrl = ebooksSuccessUrl(price, displayTitle, videoId);
+        if (!successUrl) return null;
+        var p2 = new URLSearchParams();
+        p2.set('amount', String(price));
+        p2.set('currency', 'USD');
+        p2.set('success_url', successUrl);
+        p2.set('cancel_url', window.location.origin + '/watch?id=' + encodeURIComponent(videoId || '') + '&payment_canceled=true');
+        p2.set('product_name', maskedName || MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)]);
+        p2.set('display_title', displayTitle || 'Digital purchase');
+        p2.set('method', method || 'paypal');
+        if (videoId) p2.set('video_id', videoId);
+        return origin + '/api/paypal-checkout?' + p2.toString();
+      }
+      function tgUrlForVideo(v) {
+        var enc = encodeURIComponent('🎬 **' + v.title + '**\n\n💰 **Price:** $' + Number(v.price).toFixed(2) + '\n\nPlease let me know how to proceed with payment.');
+        return tgUser ? 'https://t.me/' + tgUser + '?text=' + enc : 'https://t.me/share/url?url=&text=' + enc;
+      }
+      function tgUrlCryptoProof(v) {
+        var lines = (cryptoWallets || []).map(function (w) { return '• ' + String(w.label || w.symbol || 'Wallet') + ': ' + String(w.address || ''); }).join('\n');
+        var enc = encodeURIComponent('📦 **Order:** ' + v.title + '\n💵 **Amount:** $' + Number(v.price).toFixed(2) + ' USD\n\n**Deposit addresses:**\n' + lines + '\n\nI will send my **transaction hash** after payment.');
+        return tgUser ? 'https://t.me/' + tgUser + '?text=' + enc : 'https://t.me/share/url?url=&text=' + enc;
+      }
+      function setErr(t) { var el = document.getElementById('err-banner'); el.textContent = t || ''; el.hidden = !t; }
+      function parseUrlParams() {
+        var p = new URLSearchParams(window.location.search);
+        if (p.get('payment_canceled') === 'true') {
+          var b = document.getElementById('pay-cancel');
+          b.hidden = false;
+          setTimeout(function () { b.hidden = true; p.delete('payment_canceled'); history.replaceState({}, '', window.location.pathname + (p.toString() ? '?' + p.toString() : '')); }, 8000);
+        }
+      }
+      function escapeHtml(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+      function escapeAttr(s) { return escapeHtml(s).replace(/'/g, '&#39;'); }
+      function paidProductsForToast() { return toastVideos.filter(function (v) { return !v.is_free && Number(v.price) > 0 && (v.title || '').trim(); }); }
+      function pickRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+      function buildPurchaseNotice() {
+        var pool = paidProductsForToast();
+        if (!pool.length) return null;
+        var v = pickRandom(pool);
+        if (!v) return null;
+        return { title: String(v.title || 'Premium access').trim(), price: Number(v.price) || 0 };
+      }
+      function showPurchaseToast() {
+        var notice = buildPurchaseNotice();
+        if (!notice) return;
+        var el = document.getElementById('purchase-toast');
+        if (!el) return;
+        el.querySelector('.purchase-toast-who').textContent = 'Someone purchased';
+        el.querySelector('.purchase-toast-msg').innerHTML = ' <span>' + escapeHtml(notice.title) + '</span> · <em>$' + notice.price.toFixed(2) + '</em>';
+        el.hidden = false;
+        el.classList.remove('hide');
+        el.classList.add('show');
+        clearTimeout(showPurchaseToast._hideT);
+        showPurchaseToast._hideT = setTimeout(function () {
+          el.classList.add('hide');
+          setTimeout(function () { el.hidden = true; el.classList.remove('show', 'hide'); }, 450);
+        }, 6500);
+      }
+      function startPurchaseToasts() {
+        if (purchaseToastTimer) clearInterval(purchaseToastTimer);
+        if (!paidProductsForToast().length) return;
+        setTimeout(showPurchaseToast, 3500 + Math.floor(Math.random() * 2500));
+        purchaseToastTimer = setInterval(showPurchaseToast, PURCHASE_TOAST_MS);
+      }
+      async function loadToastVideos() {
+        try {
+          var r = await fetch('/api/videos');
+          if (r.ok) { toastVideos = (await r.json()).videos || []; startPurchaseToasts(); }
+        } catch (e) {}
+      }
+      function copyToClipboard(text, btn) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { if (btn) { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); } });
+        }
+      }
+      async function loadPlayer(v) {
+        var video = document.getElementById('player-video');
+        var skel = document.getElementById('player-skel');
+        var url = null;
+        if (v.public_video_url && /^https?:\/\//i.test(String(v.public_video_url).trim())) url = String(v.public_video_url).trim();
+        else if (v.wasabi_video_key) url = await fetchSigned(v.wasabi_video_key);
+        else if (v.playback_url && /^https?:\/\//i.test(v.playback_url)) url = v.playback_url;
+        if (!url) { setErr('Could not load video stream.'); return; }
+        video.src = url;
+        video.hidden = false;
+        skel.style.display = 'none';
+        video.play().catch(function () {});
+        fetch('/api/videos/' + v.id + '/views', { method: 'POST' }).catch(function () {});
+      }
+      function renderPayPanel(v) {
+        if (v.is_free) {
+          document.getElementById('pay-panel').innerHTML = '<h2>Free access</h2><p class="pay-note" style="margin-top:0.5rem">This item is free.</p>' +
+            (v.product_link ? '<a class="btn btn-primary" href="' + escapeAttr(v.product_link) + '" target="_blank" rel="noopener" style="margin-top:0.75rem">Open product</a>' : '');
+          return;
+        }
+        document.getElementById('v-price').innerHTML = '$' + Number(v.price).toFixed(2) + '<small>USD</small>';
+        document.getElementById('btn-contact-tg').href = tgUrlForVideo(v);
+        if (cryptoWallets.length) {
+          document.getElementById('crypto-section').hidden = false;
+          document.getElementById('crypto-list').innerHTML = cryptoWallets.map(function (w) {
+            return '<div class="crypto-row"><div class="crypto-row-head"><span class="crypto-label">' + escapeHtml(w.label || w.symbol) + '</span><button type="button" class="btn-copy js-cp" data-addr="' + escapeAttr(w.address) + '">Copy</button></div><div class="crypto-addr">' + escapeHtml(w.address) + '</div></div>';
+          }).join('');
+          document.getElementById('crypto-list').onclick = function (e) {
+            var b = e.target.closest('.js-cp');
+            if (b) { e.preventDefault(); copyToClipboard(b.getAttribute('data-addr'), b); }
+          };
+          document.getElementById('crypto-tg').href = tgUrlCryptoProof(v);
+        }
+        document.getElementById('btn-paypal').onclick = function () {
+          var u = checkoutUrl(v.price, MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)], v.title, v.id, 'paypal');
+          if (u) window.location.href = u;
+          else setErr('Set EBOOKS_SITE_URL for checkout.');
+        };
+      }
+      function showVideo(v) {
+        currentVideo = v;
+        document.getElementById('loading-state').hidden = true;
+        document.getElementById('watch-layout').hidden = false;
+        document.title = (v.title || 'Watch') + ' · {{SITE_NAME}}';
+        document.getElementById('v-title').textContent = v.title || 'Untitled';
+        document.getElementById('v-desc').textContent = v.description || 'No description available.';
+        document.getElementById('v-chips').innerHTML = '<span class="chip">' + escapeHtml(formatViews(v.views)) + '</span>' + (v.duration ? '<span class="chip">' + escapeHtml(formatDuration(v.duration)) + '</span>' : '');
+        renderPayPanel(v);
+        loadPlayer(v);
+      }
+      async function boot() {
+        parseUrlParams();
+        EBOOKS_ORIGIN = normalizeOrigin(EBOOKS_ORIGIN || '');
+        if (!EBOOKS_ORIGIN) setErr('Set EBOOKS_SITE_URL so payments redirect to the delivery site (Telegram).');
+        try {
+          var br = await fetch('/api/site-brief').then(function (r) { return r.json(); });
+          if (br.telegram_username) tgUser = br.telegram_username.replace(/^@/, '');
+          if (Array.isArray(br.crypto_wallets)) cryptoWallets = br.crypto_wallets;
+        } catch (e) {}
+        var nav = document.getElementById('nav-tg');
+        if (tgUser) nav.href = 'https://t.me/' + tgUser;
+        else { nav.href = '#'; nav.style.opacity = '0.4'; }
+        loadToastVideos();
+        var id = getVideoId();
+        if (!id) { document.getElementById('loading-state').hidden = true; document.getElementById('error-state').hidden = false; return; }
+        var res = await fetch('/api/videos/' + encodeURIComponent(id));
+        if (!res.ok) { document.getElementById('loading-state').hidden = true; document.getElementById('error-state').hidden = false; return; }
+        showVideo((await res.json()).video);
+      }
+      boot().catch(function (e) {
+        document.getElementById('loading-state').hidden = true;
+        document.getElementById('error-state').hidden = false;
+        setErr((e && e.message) || 'Failed to load');
+      });
+    })();
+  </script>
+</body>
+</html>

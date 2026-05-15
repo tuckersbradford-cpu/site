@@ -319,10 +319,28 @@ app.get('/api/video-ids', async (req, res) => {
   }
 });
 
+/** Telegram username: Supabase site_config first, then env (videos-site). */
+async function resolveTelegramUsername() {
+  let telegram = TELEGRAM_USERNAME;
+  if (supabase) {
+    try {
+      const { data } = await supabase
+        .from('site_config')
+        .select('telegram_username')
+        .limit(1)
+        .maybeSingle();
+      if (data?.telegram_username) telegram = data.telegram_username;
+    } catch (e) {
+      console.warn('site_config telegram_username read failed:', e.message);
+    }
+  }
+  return String(telegram || '').replace(/^@/, '').trim();
+}
+
 app.get('/api/site-brief', async (req, res) => {
   try {
     let videoListTitle = trimEnv('VIDEO_LIST_TITLE', 'VITE_VIDEO_LIST_TITLE');
-    let telegram = TELEGRAM_USERNAME;
+    let telegram = await resolveTelegramUsername();
     let cryptoFromDb = [];
     if (supabase) {
       const { data } = await supabase
@@ -331,7 +349,7 @@ app.get('/api/site-brief', async (req, res) => {
         .limit(1)
         .maybeSingle();
       if (data?.video_list_title) videoListTitle = data.video_list_title;
-      if (data?.telegram_username) telegram = data.telegram_username;
+      if (data?.telegram_username) telegram = String(data.telegram_username).replace(/^@/, '').trim();
       cryptoFromDb = normalizeCryptoList(data?.crypto);
     }
     const cryptoFromEnv = normalizeCryptoList(trimEnv('CRYPTO_WALLETS_JSON', 'VITE_CRYPTO_WALLETS_JSON'));
@@ -372,6 +390,49 @@ app.post('/api/videos/:id/views', async (req, res) => {
   } catch (e) {
     console.error(e);
     res.status(500).json({ error: 'Failed to increment views' });
+  }
+});
+
+app.get('/api/videos/:id', async (req, res) => {
+  try {
+    if (!supabase) {
+      return res.status(500).json({
+        error: 'Supabase not configured (set SUPABASE_URL / VITE_SUPABASE_URL plus anon or service role key).',
+      });
+    }
+
+    const id = req.params.id;
+    const joined = await supabase
+      .from('videos')
+      .select('*, video_sources(*)')
+      .eq('id', id)
+      .eq('is_active', true)
+      .maybeSingle();
+
+    let row = joined.data;
+    if (joined.error && /relationship|foreign|video_sources|schema cache/i.test(String(joined.error.message || ''))) {
+      const fb = await supabase.from('videos').select('*').eq('id', id).eq('is_active', true).maybeSingle();
+      if (fb.error) {
+        return res.status(502).json({ error: fb.error.message || 'Database error' });
+      }
+      row = fb.data;
+    } else if (joined.error) {
+      return res.status(502).json({ error: joined.error.message || 'Database error' });
+    }
+
+    if (!row) return res.status(404).json({ error: 'Video not found' });
+
+    const w = await resolveWasabiSigningConfig();
+    const payload = {
+      ...enrichVideoRow(row),
+      wasabi_signing_ready: Boolean(w.signingReady),
+    };
+
+    res.setHeader('Cache-Control', 'public, max-age=60');
+    res.json({ video: payload });
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Failed to load video' });
   }
 });
 
@@ -430,16 +491,32 @@ app.get('/api/videos', async (req, res) => {
   }
 });
 
-app.get('/', (req, res) => {
+async function renderHtmlTemplate(fileName) {
+  const telegram = await resolveTelegramUsername();
+  const html = readFileSync(path.join(__dirname, 'public', fileName), 'utf8');
+  return html
+    .replace(/\{\{SITE_NAME\}\}/g, SITE_NAME)
+    .replace(/\{\{TELEGRAM_USERNAME\}\}/g, telegram)
+    .replace(/\{\{EBOOKS_SITE_URL\}\}/g, EBOOKS_SITE_URL);
+}
+
+app.get('/', async (req, res) => {
   try {
-    const html = readFileSync(path.join(__dirname, 'public', 'index.html'), 'utf8');
-    const rendered = html
-      .replace(/\{\{SITE_NAME\}\}/g, SITE_NAME)
-      .replace(/\{\{TELEGRAM_USERNAME\}\}/g, TELEGRAM_USERNAME)
-      .replace(/\{\{EBOOKS_SITE_URL\}\}/g, EBOOKS_SITE_URL);
-    res.type('html').send(rendered);
+    res.type('html').send(await renderHtmlTemplate('index.html'));
   } catch {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  }
+});
+
+app.get('/watch/:id', (req, res) => {
+  res.redirect(302, `/watch?id=${encodeURIComponent(req.params.id)}`);
+});
+
+app.get('/watch', async (req, res) => {
+  try {
+    res.type('html').send(await renderHtmlTemplate('watch.html'));
+  } catch {
+    res.sendFile(path.join(__dirname, 'public', 'watch.html'));
   }
 });
 

@@ -8,15 +8,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --red: #e31b23;
-      --red2: #ff2f77;
-      --bg: #050508;
-      --card: linear-gradient(165deg, #121218 0%, #0a0a0e 52%, #08080c 100%);
-      --chip: rgba(15,15,17,0.96);
-      --text: #f2f2f3;
-      --muted: #9e97a8;
-      --stroke: rgba(255,255,255,0.07);
-      --stroke-hi: rgba(227,27,35,0.42);
+      --primary: #10b981;
+      --primary-light: #34d399;
+      --primary-deep: #059669;
+      --accent: #38bdf8;
+      --accent-gold: #fbbf24;
+      --bg: #0b1220;
+      --card: linear-gradient(165deg, #151d2e 0%, #111827 55%, #0f172a 100%);
+      --chip: rgba(30, 41, 59, 0.92);
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --stroke: rgba(148, 163, 184, 0.14);
+      --stroke-hi: rgba(16, 185, 129, 0.48);
+      --red: var(--primary-deep);
+      --red2: var(--primary-light);
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,33 +29,36 @@
     body {
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 100% 60% at 50% -20%, rgba(16, 185, 129, 0.09), transparent),
+        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(56, 189, 248, 0.06), transparent);
       color: var(--text);
       min-height: 100vh;
       line-height: 1.5;
     }
     .container { max-width: 1180px; margin: 0 auto; padding: 1.25rem; }
     .hero {
-      border: 1px solid rgba(227, 27, 35, 0.6);
+      border: 1px solid var(--stroke-hi);
       border-radius: 20px;
       padding: 1.35rem 1.65rem;
-      background: linear-gradient(180deg, rgba(12,12,14,0.98) 0%, rgba(8,8,10,0.98) 100%);
-      box-shadow: 0 14px 40px rgba(0,0,0,0.65);
+      background: linear-gradient(180deg, rgba(21, 29, 46, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(16, 185, 129, 0.06);
       margin-bottom: 1.25rem;
     }
-    .hero-over { color: #ff8e95; font-size: 0.72rem; font-weight: 800; letter-spacing: .12em; }
+    .hero-over { color: var(--accent-gold); font-size: 0.72rem; font-weight: 800; letter-spacing: .12em; }
     .hero h2 {
-      color: var(--red);
+      color: var(--primary-light);
       font-weight: 900;
       text-transform: uppercase;
       font-size: clamp(1.35rem, 3.5vw, 1.85rem);
       line-height: 1.1;
       margin: 0.35rem 0;
     }
-    .hero p { color: #f3d8da; font-size: 0.88rem; max-width: 520px; }
+    .hero p { color: #cbd5e1; font-size: 0.88rem; max-width: 520px; }
     .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.75rem; }
     .chip {
       font-size: 0.68rem; font-weight: 800; padding: 0.32rem 0.65rem; border-radius: 999px;
-      background: var(--chip); color: #ffc2c6; border: 1px solid rgba(227,27,35,0.5);
+      background: var(--chip); color: #a7f3d0; border: 1px solid rgba(16, 185, 129, 0.35);
     }
     .toolbar {
       display: flex; flex-direction: column; gap: 0.75rem;
@@ -59,13 +67,13 @@
     @media (min-width: 768px) {
       .toolbar { flex-direction: row; align-items: center; justify-content: space-between; }
     }
-    .toolbar h1 { font-size: 1.45rem; font-weight: 800; color: #ffe3e3; }
+    .toolbar h1 { font-size: 1.45rem; font-weight: 800; color: #e2e8f0; }
     .search {
       width: 100%; max-width: 320px; padding: 0.55rem 1rem; border-radius: 999px;
-      border: 1px solid rgba(227,27,35,0.45); background: rgba(15,15,18,0.95); color: #ffe6e6;
+      border: 1px solid rgba(56, 189, 248, 0.35); background: rgba(15, 23, 42, 0.95); color: #f1f5f9;
       font-family: inherit; font-size: 0.88rem;
     }
-    .search:focus { outline: none; border-color: rgba(227,27,35,0.9); }
+    .search:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
     .alert {
       display: none; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1rem;
       background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.35); color: #bfdbfe;
@@ -92,13 +100,13 @@
     .vcard:focus-within {
       outline: none;
       border-color: var(--stroke-hi);
-      box-shadow: 0 0 0 1px rgba(227,27,35,0.25), 0 18px 48px rgba(0,0,0,0.5);
+      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2), 0 18px 48px rgba(0, 0, 0, 0.45);
     }
     .vcard:hover {
       transform: translateY(-3px);
       border-color: var(--stroke-hi);
       box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 22px 56px rgba(0,0,0,0.55),
-        0 0 42px rgba(227,27,35,0.12);
+        0 0 42px rgba(16, 185, 129, 0.14);
     }
     .vcard.ph-card {
       cursor: default;
@@ -114,7 +122,7 @@
     }
     .vcard-media {
       position: relative; width: 100%; padding-top: 56.25%;
-      background: radial-gradient(120% 80% at 50% 0%, #1a1020 0%, #050508 72%);
+      background: radial-gradient(120% 80% at 50% 0%, #1e293b 0%, #0b1220 72%);
     }
     .vcard-media-inner {
       position: absolute; inset: 0;
@@ -130,11 +138,11 @@
       background-size: 200% 100%; animation: sh 1.2s ease-in-out infinite;
     }
     @keyframes sh { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
-    .play-hit {
+    .preview-hit {
       position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-      z-index: 4; transition: opacity 0.2s;
+      z-index: 4; text-decoration: none; color: inherit;
     }
-    .play-hit[hidden] { display: none !important; }
+    .preview-hit[hidden] { display: none !important; }
     .play-circ {
       width: 62px; height: 62px; border-radius: 50%;
       background: rgba(8,8,12,0.72);
@@ -145,7 +153,7 @@
     }
     .vcard:hover .play-circ {
       border-color: rgba(255,255,255,0.28);
-      background: rgba(227,27,35,0.15);
+      background: rgba(16, 185, 129, 0.2);
       transform: scale(1.04);
     }
     .play-tri {
@@ -232,10 +240,10 @@
       color: #fff;
     }
     .btn-primary {
-      background: linear-gradient(180deg, var(--red) 0%, #bc141c 100%);
+      background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary-deep) 100%);
       color: #fff;
-      border-color: rgba(0,0,0,0.2);
-      box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset;
+      border-color: rgba(5, 150, 105, 0.5);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.12) inset, 0 8px 24px rgba(16, 185, 129, 0.25);
     }
     .btn-primary:hover {
       filter: brightness(1.06);
@@ -281,7 +289,7 @@
       background: linear-gradient(165deg, #141418 0%, #0c0c10 45%, #09090c 100%);
       color: var(--text);
       border: 1px solid rgba(255,255,255,0.09);
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.4), 0 28px 80px rgba(0,0,0,0.75), 0 0 100px rgba(227,27,35,0.06);
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.4), 0 28px 80px rgba(0,0,0,0.75), 0 0 100px rgba(16, 185, 129, 0.08);
       display: flex;
       flex-direction: column;
       overflow: hidden;
@@ -292,16 +300,13 @@
       -webkit-backdrop-filter: blur(6px);
     }
     /** While a modal is open, hide card overlays so nothing leaks above the dialog in any browser. */
-    body.modal-dlg-open .vcard:not(.ph-card) .play-hit,
+    body.modal-dlg-open .vcard:not(.ph-card) .preview-hit,
     body.modal-dlg-open .vcard:not(.ph-card) .badge-dur,
     body.modal-dlg-open .vcard:not(.ph-card) .badge-price,
     body.modal-dlg-open .vcard:not(.ph-card) .grad-over,
     body.modal-dlg-open .vcard:not(.ph-card) .load-ov {
       visibility: hidden !important;
       pointer-events: none !important;
-    }
-    body.modal-dlg-open .vcard:not(.ph-card) .js-video-wrap:not([hidden]) {
-      visibility: hidden !important;
     }
     .dlg-h {
       flex-shrink: 0;
@@ -340,8 +345,8 @@
     .pay-summary-price small { font-size: 0.75rem; font-weight: 600; opacity: 0.65; margin-left: 0.25rem; color: #b0aab8; }
     .pay-note {
       padding: 0.7rem 0.85rem; border-radius: 10px; margin-bottom: 1rem;
-      font-size: 0.75rem; font-weight: 600; line-height: 1.45; color: #e8dfe0;
-      background: rgba(227,27,35,0.1); border: 1px solid rgba(227,27,35,0.28);
+      font-size: 0.75rem; font-weight: 600; line-height: 1.45; color: #d1fae5;
+      background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.28);
     }
     .pay-section { margin-bottom: 1.1rem; }
     .pay-section:last-child { margin-bottom: 0; }
@@ -391,7 +396,39 @@
     }
     footer { text-align: center; padding: 2rem 1rem; font-size: 0.72rem; color: #666; }
     .nav-top { display: flex; justify-content: flex-end; padding: 0.5rem 0; }
-    .nav-top a { color: #229ed9; font-weight: 700; text-decoration: none; font-size: 0.78rem; }
+    .nav-top a {
+      color: var(--accent); font-weight: 700; text-decoration: none; font-size: 0.78rem;
+      padding: 0.4rem 0.75rem; border-radius: 999px;
+      border: 1px solid rgba(56, 189, 248, 0.35); background: rgba(15, 23, 42, 0.8);
+    }
+    .nav-top a:hover { color: #fff; border-color: var(--accent); }
+    .purchase-toast {
+      position: fixed; left: 1rem; bottom: 1rem; z-index: 99990;
+      max-width: min(340px, calc(100vw - 2rem));
+      display: flex; align-items: flex-start; gap: 0.65rem;
+      padding: 0.85rem 1rem; border-radius: 14px;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 24px rgba(16, 185, 129, 0.12);
+      transform: translateY(120%); opacity: 0;
+      transition: transform 0.45s var(--ease), opacity 0.45s var(--ease);
+      pointer-events: none;
+    }
+    .purchase-toast.show { transform: translateY(0); opacity: 1; }
+    .purchase-toast.hide { transform: translateY(12px); opacity: 0; }
+    .purchase-toast-dot {
+      flex-shrink: 0; width: 10px; height: 10px; margin-top: 0.35rem; border-radius: 50%;
+      background: var(--primary); box-shadow: 0 0 12px var(--primary);
+      animation: pulse-dot 1.4s ease-in-out infinite;
+    }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+    .purchase-toast-body { flex: 1; min-width: 0; font-size: 0.78rem; line-height: 1.45; color: #cbd5e1; }
+    .purchase-toast-who { display: block; font-weight: 800; color: #f8fafc; margin-bottom: 0.15rem; }
+    .purchase-toast-msg em { font-style: normal; color: var(--accent-gold); font-weight: 800; }
+    .purchase-toast-time { flex-shrink: 0; font-size: 0.62rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    @media (max-width: 480px) {
+      .purchase-toast { left: 0.65rem; right: 0.65rem; max-width: none; }
+    }
   </style>
 </head>
 <body>
@@ -430,7 +467,8 @@
     <div class="dlg-h"><strong id="dlg-pay-heading">Checkout</strong><button type="button" class="dlg-x" data-close="p" aria-label="Close">×</button></div>
     <div class="dlg-b">
       <div class="pay-summary" id="dlg-pay-summary" aria-live="polite"></div>
-      <div class="pay-note">Card checkout uses a neutral product name on your statement. Access is granted after payment confirmation.</div>
+      <div class="pay-note"><strong>Pay instantly:</strong> You receive access automatically after payment. Discreet name on your statement.
+        <span style="display:block;margin-top:0.45rem"><strong>Crypto:</strong> Send below, then payment proof on Telegram.</span></div>
 
       <div class="pay-section">
         <div class="pay-section-title">Card &amp; digital wallets</div>
@@ -441,7 +479,7 @@
 
       <div class="pay-section" id="dlg-pay-crypto-section" hidden>
         <div class="pay-section-title">Cryptocurrency</div>
-        <p class="pay-section-hint">Send the USD equivalent for this item to one of the addresses below. Include your transaction hash when you message us so we can match your payment.</p>
+        <p class="pay-section-hint">Send crypto, then message us on Telegram with your transaction hash.</p>
         <div id="dlg-pay-crypto-list"></div>
         <a class="btn btn-block btn-ghost" style="margin-top:0.65rem;padding:0.72rem 1rem;border-radius:12px;text-decoration:none" id="dlg-pay-crypto-tg" href="#" target="_blank" rel="noopener">Send proof via Telegram</a>
       </div>
@@ -450,18 +488,26 @@
 
   <footer>© {{SITE_NAME}} · Supabase + Wasabi</footer>
 
+  <div id="purchase-toast" class="purchase-toast" hidden role="status" aria-live="polite">
+    <span class="purchase-toast-dot" aria-hidden="true"></span>
+    <div class="purchase-toast-body">
+      <strong class="purchase-toast-who"></strong>
+      <span class="purchase-toast-msg"></span>
+    </div>
+    <span class="purchase-toast-time">just now</span>
+  </div>
+
   <script>
     (function () {
-      var PREVIEW_EV = 'video-card-preview-change';
       var EBOOKS_ORIGIN = '{{EBOOKS_SITE_URL}}';
-      var TG_ENV = '{{TELEGRAM_USERNAME}}'.replace(/^@/, '').trim();
-      var activePreviewId = null;
+      var TG_ENV = '{{TELEGRAM_USERNAME}}'.replace(/^@/, '').trim(); /* SSR: Supabase via server; client refreshes from /api/site-brief */
       var MASK_NAMES = [
         'Personal Development Ebook', 'Financial Freedom Ebook', 'Digital Marketing Guide',
         'Health & Wellness Ebook', 'Productivity Masterclass', 'Mindfulness & Meditation Guide',
         'Entrepreneurship Blueprint'
       ];
-
+      var PURCHASE_TOAST_MS = 78000;
+      var purchaseToastTimer = null;
       function shuffle(arr) {
         var a = arr.slice();
         for (var i = a.length - 1; i > 0; i--) {
@@ -469,6 +515,25 @@
           var t = a[i]; a[i] = a[j]; a[j] = t;
         }
         return a;
+      }
+
+      /** Most expensive paid item first; everything else shuffled. */
+      function orderVideosForGrid(videos) {
+        var list = (videos || []).slice();
+        if (list.length <= 1) return list;
+        var paid = list.filter(function (v) {
+          return !v.is_free && Number(v.price) > 0;
+        });
+        if (!paid.length) return shuffle(list);
+        var maxP = paid.reduce(function (m, v) {
+          return Math.max(m, Number(v.price) || 0);
+        }, 0);
+        var top = paid.filter(function (v) {
+          return (Number(v.price) || 0) === maxP;
+        });
+        var first = pickRandom(top.length ? top : paid);
+        var rest = list.filter(function (v) { return v.id !== first.id; });
+        return [first].concat(shuffle(rest));
       }
 
       function normalizeOrigin(u) {
@@ -524,11 +589,25 @@
         return j.success && j.url ? j.url : null;
       }
 
-      function checkoutUrl(price, maskedName, displayTitle, videoId) {
+      function ebooksSuccessUrl(price, displayTitle, videoId) {
+        var origin = normalizeOrigin(String(EBOOKS_ORIGIN || '').trim().replace(/\/+$/, ''));
+        if (!origin) return null;
+        var params = new URLSearchParams();
+        params.set('status', 'success');
+        params.set('product_name', displayTitle || 'Digital purchase');
+        params.set('amount', String(price));
+        if (videoId) params.set('video_id', String(videoId));
+        var tg = (tgUser || TG_ENV || '').replace(/^@/, '').trim();
+        if (tg) params.set('telegram_username', tg);
+        return origin + '/?' + params.toString();
+      }
+
+      function checkoutUrl(price, maskedName, displayTitle, videoId, method) {
         var origin = normalizeOrigin(String(EBOOKS_ORIGIN || '').trim().replace(/\/+$/, ''));
         if (!origin) return null;
         var vid = videoId || '';
-        var successUrl = window.location.origin + window.location.pathname + '?paid=1&video_id=' + encodeURIComponent(vid);
+        var successUrl = ebooksSuccessUrl(price, displayTitle, vid);
+        if (!successUrl) return null;
         var cancelUrl = window.location.origin + window.location.pathname + '?payment_canceled=true';
         var p2 = new URLSearchParams();
         p2.set('amount', String(price));
@@ -537,9 +616,13 @@
         p2.set('cancel_url', cancelUrl);
         p2.set('product_name', maskedName || MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)]);
         p2.set('display_title', displayTitle || 'Digital purchase');
-        p2.set('method', 'paypal');
+        p2.set('method', method || 'paypal');
         if (vid) p2.set('video_id', vid);
         return origin + '/api/paypal-checkout?' + p2.toString();
+      }
+
+      function watchPageUrl(videoId) {
+        return '/watch?id=' + encodeURIComponent(String(videoId || ''));
       }
 
       function tgUrlForVideo(v, tgUser) {
@@ -560,6 +643,55 @@
         var el = document.getElementById('err-banner');
         el.textContent = t || '';
         el.hidden = !t;
+      }
+
+      function paidProductsForToast() {
+        return allVideos.filter(function (v) {
+          return !v.is_free && Number(v.price) > 0 && (v.title || '').trim();
+        });
+      }
+
+      function pickRandom(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function buildPurchaseNotice() {
+        var pool = paidProductsForToast();
+        if (!pool.length) return null;
+        var v = pickRandom(pool);
+        if (!v) return null;
+        return {
+          title: String(v.title || 'Premium access').trim(),
+          price: Number(v.price) || 0
+        };
+      }
+
+      function showPurchaseToast() {
+        var notice = buildPurchaseNotice();
+        if (!notice) return;
+        var el = document.getElementById('purchase-toast');
+        if (!el) return;
+        el.querySelector('.purchase-toast-who').textContent = 'Someone purchased';
+        el.querySelector('.purchase-toast-msg').innerHTML =
+          ' <span>' + escapeHtml(notice.title) + '</span> · <em>$' + notice.price.toFixed(2) + '</em>';
+        el.hidden = false;
+        el.classList.remove('hide');
+        el.classList.add('show');
+        clearTimeout(showPurchaseToast._hideT);
+        showPurchaseToast._hideT = setTimeout(function () {
+          el.classList.add('hide');
+          setTimeout(function () {
+            el.hidden = true;
+            el.classList.remove('show', 'hide');
+          }, 450);
+        }, 6500);
+      }
+
+      function startPurchaseToasts() {
+        if (purchaseToastTimer) clearInterval(purchaseToastTimer);
+        if (!paidProductsForToast().length) return;
+        setTimeout(showPurchaseToast, 3500 + Math.floor(Math.random() * 2500));
+        purchaseToastTimer = setInterval(showPurchaseToast, PURCHASE_TOAST_MS);
       }
 
       function wireOnlineChip() {
@@ -588,7 +720,7 @@
       }
 
       var allVideos = [];
-      var tgUser = TG_ENV;
+      var tgUser = TG_ENV; /* overwritten by /api/site-brief (Supabase) when available */
       var payTarget = null;
       var payCryptoWallets = [];
 
@@ -651,7 +783,8 @@
         g.innerHTML = '';
         list.forEach(function (v) {
           var el = document.createElement('article');
-          el.className = 'vcard' + (isPlaceholder ? ' ph-card' : '') + (!isPlaceholder && isFree ? ' vcard-ph-free' : '');
+          var isFree = !isPlaceholder && !!v.is_free;
+          el.className = 'vcard' + (isPlaceholder ? ' ph-card' : '') + (isFree ? ' vcard-ph-free' : '');
           el.dataset.id = v.id;
           if (isPlaceholder) {
             el.innerHTML =
@@ -662,8 +795,9 @@
           }
 
           var price = Number(v.price) || 0;
-          var isFree = !!v.is_free;
+          isFree = !!v.is_free;
           var dur = formatDuration(v.duration);
+          var previewHref = watchPageUrl(v.id);
           var svgEye =
             '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
           var svgCal =
@@ -686,11 +820,8 @@
               '<div class="vcard-media-inner js-inner">' +
                 '<div class="skel js-skel"></div>' +
                 '<img class="js-thumb" alt="" style="display:none" />' +
-                '<div class="js-video-wrap" hidden style="position:absolute;inset:0;z-index:6;background:#05000c">' +
-                  '<video class="js-vid" controls playsinline style="width:100%;height:100%;object-fit:cover"></video></div>' +
                 '<div class="grad-over"></div>' +
-                '<div class="play-hit js-play-hit"><div class="play-circ"><div class="play-tri"></div></div></div>' +
-                '<div class="load-ov js-load" hidden><span>Loading preview…</span></div>' +
+                '<a class="preview-hit" href="' + escapeAttr(previewHref) + '"><div class="play-circ"><div class="play-tri"></div></div></a>' +
                 badgeTop +
                 (dur ? '<span class="badge-dur">' + escapeHtml(dur) + '</span>' : '') +
               '</div>' +
@@ -703,6 +834,7 @@
                 '<span class="vcard-meta-item" style="justify-content:flex-end;text-align:right">' + svgCal + metaDate + '</span>' +
               '</div>' +
               '<div class="btn-row">' +
+                '<a class="btn btn-primary" href="' + escapeAttr(previewHref) + '" onclick="event.stopPropagation()">Preview</a>' +
                 '<button type="button" class="btn js-details">View details</button>' +
                 (isFree && v.product_link
                   ? '<a class="btn btn-primary" href="' + escapeAttr(v.product_link) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Open product</a>'
@@ -723,11 +855,6 @@
 
           el.dataset.httpPoster = httpPoster;
           el.dataset.thumbKey = v.wasabi_thumb_key || '';
-          el.dataset.videoKey = v.wasabi_video_key || '';
-          el.dataset.fallbackPlay =
-            v.public_video_url && /^https?:\/\//i.test(String(v.public_video_url).trim())
-              ? String(v.public_video_url).trim()
-              : ((v.playback_url && /^https?:\/\//i.test(v.playback_url)) ? v.playback_url : '');
 
           el.setAttribute('aria-label', (v.title || 'Catalog item') + (isFree ? ', free' : ', ' + price.toFixed(2) + ' USD'));
 
@@ -746,7 +873,6 @@
             openPay(v);
           });
 
-          wireCardMedia(el, v);
           g.appendChild(el);
         });
 
@@ -758,68 +884,6 @@
           .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
       }
       function escapeAttr(s) { return escapeHtml(s).replace(/'/g, '&#39;'); }
-
-      function wireCardMedia(card, v) {
-        var playHit = card.querySelector('.js-play-hit');
-        var skel = card.querySelector('.js-skel');
-        var img = card.querySelector('.js-thumb');
-        var load = card.querySelector('.js-load');
-        var wrap = card.querySelector('.js-video-wrap');
-        var video = card.querySelector('.js-vid');
-
-        playHit.addEventListener('click', function (e) {
-          e.stopPropagation();
-          togglePreview(card, v, skel, img, load, wrap, video, playHit);
-        });
-      }
-
-      function togglePreview(card, v, skel, img, load, wrap, video, playHit) {
-        if (wrap.hidden) {
-          window.dispatchEvent(new CustomEvent(PREVIEW_EV, { detail: { id: v.id } }));
-          load.hidden = false;
-          var urlPromise;
-          if (card.dataset.fallbackPlay) urlPromise = Promise.resolve(card.dataset.fallbackPlay);
-          else if (card.dataset.videoKey) urlPromise = fetchSigned(card.dataset.videoKey);
-          else urlPromise = Promise.resolve(null);
-
-          urlPromise.then(function (url) {
-            load.hidden = true;
-            if (!url) return;
-            video.src = url;
-            wrap.hidden = false;
-            playHit.hidden = true;
-            skel.style.display = 'none';
-            img.style.display = 'none';
-            video.play().catch(function () {});
-          });
-        } else {
-          video.pause();
-          video.removeAttribute('src');
-          video.load();
-          wrap.hidden = true;
-          playHit.hidden = false;
-          img.style.display = img.src ? 'block' : 'none';
-          skel.style.display = img.src ? 'none' : 'block';
-        }
-      }
-
-      window.addEventListener(PREVIEW_EV, function (ev) {
-        var id = ev.detail && ev.detail.id;
-        document.querySelectorAll('.vcard').forEach(function (card) {
-          if (card.dataset.id === id) return;
-          var wrap = card.querySelector('.js-video-wrap');
-          var vid = card.querySelector('.js-vid');
-          var ph = card.querySelector('.js-play-hit');
-          var sk = card.querySelector('.js-skel');
-          var im = card.querySelector('.js-thumb');
-          if (wrap && !wrap.hidden) {
-            vid.pause(); vid.removeAttribute('src'); vid.load();
-            wrap.hidden = true;
-            if (ph) ph.hidden = false;
-            if (im && im.src) { im.style.display = 'block'; if (sk) sk.style.display = 'none'; }
-          }
-        });
-      });
 
       function hydrateThumbs() {
         document.querySelectorAll('.vcard:not(.ph-card)').forEach(function (card) {
@@ -879,8 +943,9 @@
           '<p style="font-size:0.72rem;color:#888;margin-bottom:0.65rem;line-height:1.45">' +
           'Payments use industry-standard processors. Charges appear under a neutral descriptor on your statement.</p>' +
           '<div style="margin-top:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap">' +
+          '<a class="btn btn-primary" href="' + escapeAttr(watchPageUrl(v.id)) + '">Watch &amp; pay</a>' +
           '<a class="btn" href="' + escapeAttr(tgUrlForVideo(v, tgUser) || '#') + '" target="_blank">Contact</a>' +
-          (!v.is_free ? '<button type="button" class="btn btn-primary js-dpay">Continue to payment</button>' : '') +
+          (!v.is_free ? '<button type="button" class="btn js-dpay">Checkout here</button>' : '') +
           '</div>';
         var bp = d.querySelector('.js-dpay');
         if (bp) bp.addEventListener('click', function () { d.close(); openPay(v); });
@@ -943,11 +1008,16 @@
         document.getElementById('dlg-pay').close();
       });
 
-      document.getElementById('btn-paypp').addEventListener('click', function () {
+      function startCheckout(method) {
         if (!payTarget) return;
         var masked = MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)];
-        var u = checkoutUrl(payTarget.price, masked, payTarget.title, payTarget.id);
+        var u = checkoutUrl(payTarget.price, masked, payTarget.title, payTarget.id, method);
         if (u) window.location.href = u;
+        else setErr('Set EBOOKS_SITE_URL so success redirects to the delivery site (Telegram).');
+      }
+
+      document.getElementById('btn-paypp').addEventListener('click', function () {
+        startCheckout('paypal');
       });
 
       document.getElementById('search').addEventListener('input', function () {
@@ -1002,8 +1072,9 @@
           return;
         }
         var pack = await vidRes.json();
-        allVideos = shuffle(pack.videos || []);
+        allVideos = orderVideosForGrid(pack.videos || []);
         renderGrid(allVideos, false);
+        startPurchaseToasts();
       }
 
       boot().catch(function (e) {
