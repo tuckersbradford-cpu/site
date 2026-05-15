@@ -48,10 +48,17 @@
     return p;
   }
 
+  function checkoutCancelUrl(origin, checkoutParams) {
+    var cancelP = new URLSearchParams(checkoutParams.toString());
+    cancelP.set('payment_canceled', 'true');
+    return origin + '/api/paypal-checkout?' + cancelP.toString();
+  }
+
   function checkoutUrl(ebooksOrigin, price, maskedName, displayTitle, videoId, method) {
     var origin = normalizeOrigin(String(ebooksOrigin || '').trim().replace(/\/+$/, ''));
     var p = checkoutQuery(ebooksOrigin, price, maskedName, displayTitle, videoId, method);
     if (!p || !origin) return null;
+    p.set('cancel_url', checkoutCancelUrl(origin, p));
     return origin + '/api/paypal-checkout?' + p.toString();
   }
 

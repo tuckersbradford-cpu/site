@@ -616,6 +616,9 @@
         p2.set('display_title', displayTitle || 'Digital purchase');
         p2.set('method', method || 'paypal');
         if (vid) p2.set('video_id', vid);
+        var cancelP = new URLSearchParams(p2.toString());
+        cancelP.set('payment_canceled', 'true');
+        p2.set('cancel_url', origin + '/api/paypal-checkout?' + cancelP.toString());
         return origin + '/api/paypal-checkout?' + p2.toString();
       }
 
