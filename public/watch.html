@@ -263,7 +263,6 @@
         p2.set('amount', String(price));
         p2.set('currency', 'USD');
         p2.set('success_url', successUrl);
-        p2.set('cancel_url', window.location.origin + '/watch?id=' + encodeURIComponent(videoId || '') + '&payment_canceled=true');
         p2.set('product_name', maskedName || MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)]);
         p2.set('display_title', displayTitle || 'Digital purchase');
         p2.set('method', method || 'paypal');

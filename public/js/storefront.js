@@ -25,27 +25,34 @@
     return origin + '/?' + p.toString();
   }
 
-  function checkoutUrl(ebooksOrigin, price, maskedName, displayTitle, videoId, method, cancelPath) {
+  function checkoutQuery(ebooksOrigin, price, maskedName, displayTitle, videoId, method, extra) {
     var origin = normalizeOrigin(String(ebooksOrigin || '').trim().replace(/\/+$/, ''));
     if (!origin) return null;
     var vid = videoId || '';
     var title = displayTitle || 'Digital purchase';
     var successUrl = ebooksSuccessUrl(origin, price, title, vid);
-    var cancelBase = cancelPath || (window.location.pathname || '/');
-    var cancelUrl =
-      window.location.origin +
-      cancelBase +
-      (vid ? '?id=' + encodeURIComponent(vid) + '&payment_canceled=true' : '?payment_canceled=true');
-    var p2 = new URLSearchParams();
-    p2.set('amount', String(price));
-    p2.set('currency', 'USD');
-    p2.set('success_url', successUrl);
-    p2.set('cancel_url', cancelUrl);
-    p2.set('product_name', pickMaskedName(maskedName));
-    p2.set('display_title', title);
-    p2.set('method', method || 'paypal');
-    if (vid) p2.set('video_id', vid);
-    return origin + '/api/paypal-checkout?' + p2.toString();
+    if (!successUrl) return null;
+    var p = new URLSearchParams();
+    p.set('amount', String(price));
+    p.set('currency', 'USD');
+    p.set('success_url', successUrl);
+    p.set('product_name', pickMaskedName(maskedName));
+    p.set('display_title', title);
+    p.set('method', method || 'paypal');
+    if (vid) p.set('video_id', vid);
+    if (extra) {
+      Object.keys(extra).forEach(function (k) {
+        if (extra[k] != null && extra[k] !== '') p.set(k, String(extra[k]));
+      });
+    }
+    return p;
+  }
+
+  function checkoutUrl(ebooksOrigin, price, maskedName, displayTitle, videoId, method) {
+    var origin = normalizeOrigin(String(ebooksOrigin || '').trim().replace(/\/+$/, ''));
+    var p = checkoutQuery(ebooksOrigin, price, maskedName, displayTitle, videoId, method);
+    if (!p || !origin) return null;
+    return origin + '/api/paypal-checkout?' + p.toString();
   }
 
   function watchUrl(videoId, preview) {
