@@ -467,13 +467,15 @@
     <div class="dlg-h"><strong id="dlg-pay-heading">Checkout</strong><button type="button" class="dlg-x" data-close="p" aria-label="Close">×</button></div>
     <div class="dlg-b">
       <div class="pay-summary" id="dlg-pay-summary" aria-live="polite"></div>
-      <div class="pay-note"><strong>Pay instantly:</strong> You receive access automatically after payment. Discreet name on your statement.
+      <div class="pay-note"><strong>Pay instantly</strong> (PayPal): automatic delivery after payment; discreet name on your statement.
+        <span style="display:block;margin-top:0.45rem"><strong>Pay with card</strong> (Paddle): same flow — you finish on this delivery site, then Telegram.</span>
         <span style="display:block;margin-top:0.45rem"><strong>Crypto:</strong> Send below, then payment proof on Telegram.</span></div>
 
       <div class="pay-section">
         <div class="pay-section-title">Card &amp; digital wallets</div>
         <div class="pay-actions">
           <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px" id="btn-paypp">Pay instantly</button>
+          <button type="button" class="btn btn-block btn-ghost" style="padding:0.72rem 1rem;border-radius:12px;margin-top:0.35rem" id="btn-paddle">Pay with card</button>
         </div>
       </div>
 
@@ -1020,6 +1022,12 @@
       document.getElementById('btn-paypp').addEventListener('click', function () {
         startCheckout('paypal');
       });
+      var btnPd = document.getElementById('btn-paddle');
+      if (btnPd) {
+        btnPd.addEventListener('click', function () {
+          startCheckout('paddle');
+        });
+      }
 
       document.getElementById('search').addEventListener('input', function () {
         renderGrid(filterList(this.value), false);

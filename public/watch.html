@@ -181,13 +181,15 @@
         <h2>Unlock access</h2>
         <p class="pay-price" id="v-price">—</p>
         <p class="pay-note">
-          <strong>Pay instantly:</strong> You receive access automatically after payment. Discreet name on your statement.
+          <strong>Pay instantly</strong> (PayPal): automatic delivery after payment; discreet name on your statement.
+          <span style="display:block;margin-top:0.45rem"><strong>Pay with card</strong> (Paddle): same flow — checkout on the delivery site, then Telegram.</span>
           <span style="display:block;margin-top:0.45rem"><strong>Crypto:</strong> Send below, then payment proof on Telegram.</span>
         </p>
         <div class="pay-section">
           <p class="pay-section-title">Card &amp; digital wallets</p>
           <div class="pay-actions">
             <button type="button" class="btn btn-primary" id="btn-paypal">Pay instantly</button>
+            <button type="button" class="btn" id="btn-paddle" style="margin-top:0.35rem">Pay with card</button>
           </div>
         </div>
         <div class="pay-section" id="crypto-section" hidden>
@@ -369,6 +371,11 @@
         }
         document.getElementById('btn-paypal').onclick = function () {
           var u = checkoutUrl(v.price, MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)], v.title, v.id, 'paypal');
+          if (u) window.location.href = u;
+          else setErr('Set EBOOKS_SITE_URL for checkout.');
+        };
+        document.getElementById('btn-paddle').onclick = function () {
+          var u = checkoutUrl(v.price, MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)], v.title, v.id, 'paddle');
           if (u) window.location.href = u;
           else setErr('Set EBOOKS_SITE_URL for checkout.');
         };
