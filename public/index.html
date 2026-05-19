@@ -359,6 +359,13 @@
     }
     .btn-block { width: 100%; display: block; box-sizing: border-box; }
     .pay-actions { display: flex; flex-direction: column; gap: 0.45rem; }
+    .btn-pay-inner {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 0.55rem; width: 100%; flex-wrap: wrap;
+    }
+    .btn-pay-text { font-weight: 700; letter-spacing: 0.01em; }
+    .pay-method-icons { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .pay-method-icons svg { height: 1.15rem; width: auto; flex-shrink: 0; opacity: 0.95; }
     .crypto-row {
       display: flex; flex-direction: column; gap: 0.4rem;
       padding: 0.75rem 0.85rem;
@@ -467,15 +474,25 @@
     <div class="dlg-h"><strong id="dlg-pay-heading">Checkout</strong><button type="button" class="dlg-x" data-close="p" aria-label="Close">×</button></div>
     <div class="dlg-b">
       <div class="pay-summary" id="dlg-pay-summary" aria-live="polite"></div>
-      <div class="pay-note"><strong>Pay instantly</strong> (PayPal): automatic delivery after payment; discreet name on your statement.
-        <span style="display:block;margin-top:0.45rem"><strong>Pay with card</strong> (Paddle): same flow — you finish on this delivery site, then Telegram.</span>
+      <div class="pay-note"><strong>Pay Instantly</strong> (card, Apple Pay): secure checkout on the delivery site, then Telegram access.
+        <span style="display:block;margin-top:0.45rem"><strong>PayPal or card</strong>: automatic delivery after payment; discreet name on your statement.</span>
         <span style="display:block;margin-top:0.45rem"><strong>Crypto:</strong> Send below, then payment proof on Telegram.</span></div>
 
       <div class="pay-section">
         <div class="pay-section-title">Card &amp; digital wallets</div>
         <div class="pay-actions">
-          <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px" id="btn-paypp">Pay instantly</button>
-          <button type="button" class="btn btn-block btn-ghost" style="padding:0.72rem 1rem;border-radius:12px;margin-top:0.35rem" id="btn-paddle">Pay with card</button>
+          <button type="button" class="btn btn-primary btn-block btn-paddle-cta" style="padding:0.78rem 1rem;border-radius:12px" id="btn-paddle">
+            <span class="btn-pay-inner">
+              <span class="btn-pay-text">Pay Instantly</span>
+              <span class="pay-method-icons" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                <svg viewBox="0 0 38 24" role="img" aria-label="Apple Pay"><rect width="38" height="24" rx="4" fill="currentColor" opacity="0.14"/><path fill="currentColor" d="M9.2 12.1c-.03-2.1 1.7-3.1 1.78-3.16-1-.14-1.95.58-2.45.58-.5 0-1.28-.56-2.1-.55-1.08.02-2.07.63-2.62 1.6-1.12 1.94-.29 4.82.8 6.4.53.77 1.16 1.64 1.99 1.61.8-.03 1.1-.52 2.07-.52.97 0 1.24.52 2.09.5.86-.02 1.4-.78 1.92-1.55.6-.87.85-1.72.86-1.76-.02-.01-1.66-.64-1.67-2.65zM11.1 7.9c.44-.53.74-1.27.66-2-.63.03-1.4.42-1.85.95-.41.47-.77 1.23-.67 1.95.72.06 1.45-.37 1.86-1.9z"/><path fill="currentColor" d="M17.2 8.3h-1.1c-.27 0-.48.07-.63.22-.15.14-.23.35-.23.61v5.5h1.05v-1.55h1.02c.62 0 1.1-.16 1.44-.48.34-.32.51-.76.51-1.32 0-.55-.16-.98-.49-1.3-.33-.32-.8-.48-1.4-.48zm-.05 3.55h-.97V9.35h.97c.42 0 .73.1.94.3.2.2.31.48.31.84 0 .36-.1.64-.3.84-.2.2-.5.3-.95.3zm3.35-3.55h-1.05v5.5h1.05V8.3zm2.2 0l-1.55 5.5h1.1l.33-1.28h1.72l.33 1.28h1.15l-1.58-5.5h-1.5zm-.25 3.35l.58-2.2.58 2.2h-1.16z"/></svg>
+              </span>
+            </span>
+          </button>
+          <button type="button" class="btn btn-block btn-ghost" style="padding:0.72rem 1rem;border-radius:12px;margin-top:0.35rem" id="btn-paypp">
+            <span class="btn-pay-inner"><span class="btn-pay-text">PayPal or card</span></span>
+          </button>
         </div>
       </div>
 
