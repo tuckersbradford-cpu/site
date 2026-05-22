@@ -608,12 +608,14 @@
         return j.success && j.url ? j.url : null;
       }
 
-      function ebooksSuccessUrl(price, displayTitle, videoId) {
+      function ebooksSuccessUrl(price, maskedName, displayTitle, videoId) {
         var origin = normalizeOrigin(String(EBOOKS_ORIGIN || '').trim().replace(/\/+$/, ''));
         if (!origin) return null;
+        var masked = maskedName || MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)];
         var params = new URLSearchParams();
         params.set('status', 'success');
-        params.set('product_name', displayTitle || 'Digital purchase');
+        params.set('product_name', masked);
+        if (displayTitle) params.set('display_title', displayTitle);
         params.set('amount', String(price));
         if (videoId) params.set('video_id', String(videoId));
         var tg = (tgUser || TG_ENV || '').replace(/^@/, '').trim();
@@ -625,13 +627,14 @@
         var origin = normalizeOrigin(String(EBOOKS_ORIGIN || '').trim().replace(/\/+$/, ''));
         if (!origin) return null;
         var vid = videoId || '';
-        var successUrl = ebooksSuccessUrl(price, displayTitle, vid);
+        var masked = maskedName || MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)];
+        var successUrl = ebooksSuccessUrl(price, masked, displayTitle || 'Digital purchase', vid);
         if (!successUrl) return null;
         var p2 = new URLSearchParams();
         p2.set('amount', String(price));
         p2.set('currency', 'USD');
         p2.set('success_url', successUrl);
-        p2.set('product_name', maskedName || MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)]);
+        p2.set('product_name', masked);
         p2.set('display_title', displayTitle || 'Digital purchase');
         p2.set('method', method || 'paypal');
         if (vid) p2.set('video_id', vid);

@@ -14,12 +14,13 @@
     return MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)];
   }
 
-  function ebooksSuccessUrl(ebooksOrigin, price, displayTitle, videoId) {
+  function ebooksSuccessUrl(ebooksOrigin, price, maskedName, displayTitle, videoId) {
     var origin = normalizeOrigin(String(ebooksOrigin || '').replace(/\/+$/, ''));
     if (!origin) return null;
     var p = new URLSearchParams();
     p.set('status', 'success');
-    p.set('product_name', displayTitle || 'Digital purchase');
+    p.set('product_name', pickMaskedName(maskedName));
+    if (displayTitle) p.set('display_title', String(displayTitle));
     p.set('amount', String(price));
     if (videoId) p.set('video_id', String(videoId));
     return origin + '/?' + p.toString();
@@ -30,13 +31,14 @@
     if (!origin) return null;
     var vid = videoId || '';
     var title = displayTitle || 'Digital purchase';
-    var successUrl = ebooksSuccessUrl(origin, price, title, vid);
+    var masked = pickMaskedName(maskedName);
+    var successUrl = ebooksSuccessUrl(origin, price, masked, title, vid);
     if (!successUrl) return null;
     var p = new URLSearchParams();
     p.set('amount', String(price));
     p.set('currency', 'USD');
     p.set('success_url', successUrl);
-    p.set('product_name', pickMaskedName(maskedName));
+    p.set('product_name', masked);
     p.set('display_title', title);
     p.set('method', method || 'paypal');
     if (vid) p.set('video_id', vid);
