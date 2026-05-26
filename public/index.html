@@ -475,7 +475,7 @@
     <div class="dlg-b">
       <div class="pay-summary" id="dlg-pay-summary" aria-live="polite"></div>
       <div class="pay-note"><strong>Pay Instantly</strong> (PayPal or card): secure checkout on the delivery site, then Telegram access; discreet name on your statement.
-        <span style="display:block;margin-top:0.45rem"><strong>Crypto:</strong> Send below, then payment proof on Telegram.</span></div>
+        <span style="display:block;margin-top:0.45rem">Message us on Telegram and buy the gift card we request — <strong>3 bonus contents</strong>.</span></div>
 
       <div class="pay-section">
         <div class="pay-section-title">Card &amp; digital wallets</div>
@@ -494,7 +494,6 @@
 
       <div class="pay-section" id="dlg-pay-crypto-section" hidden>
         <div class="pay-section-title">Cryptocurrency</div>
-        <p class="pay-section-hint">Send crypto, then message us on Telegram with your transaction hash.</p>
         <div id="dlg-pay-crypto-list"></div>
         <a class="btn btn-block btn-ghost" style="margin-top:0.65rem;padding:0.72rem 1rem;border-radius:12px;text-decoration:none" id="dlg-pay-crypto-tg" href="#" target="_blank" rel="noopener">Send proof via Telegram</a>
       </div>
@@ -779,10 +778,9 @@
           return '• ' + String(w.label || w.symbol || 'Wallet').toUpperCase() + ': ' + String(w.address || '');
         }).join('\n');
         var msg =
-          '📦 **Order:** ' + v.title + '\n' +
-          '💵 **Amount:** $' + Number(v.price).toFixed(2) + ' USD (send the crypto equivalent)\n\n' +
-          '**Deposit addresses:**\n' + lines + '\n\n' +
-          'I will send my **transaction hash** after payment.';
+          'Crypto $' + Number(v.price).toFixed(2) + ' — ' + v.title + '\n' +
+          lines + '\n' +
+          'TX hash:';
         var enc = encodeURIComponent(msg);
         if (tgUser) return 'https://t.me/' + tgUser + '?text=' + enc;
         return 'https://t.me/share/url?url=&text=' + enc;

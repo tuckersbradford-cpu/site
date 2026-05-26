@@ -141,10 +141,9 @@
       return '• ' + String(w.label || w.symbol || 'Wallet').toUpperCase() + ': ' + String(w.address || '');
     }).join('\n');
     var msg =
-      '📦 **Order:** ' + v.title + '\n' +
-      '💵 **Amount:** $' + Number(v.price).toFixed(2) + ' USD (send the crypto equivalent)\n\n' +
-      '**Deposit addresses:**\n' + lines + '\n\n' +
-      'I will send my **transaction hash** after payment.';
+      'Crypto $' + Number(v.price).toFixed(2) + ' — ' + v.title + '\n' +
+      lines + '\n' +
+      'TX hash:';
     var enc = encodeURIComponent(msg);
     if (tgUser) return 'https://t.me/' + tgUser + '?text=' + enc;
     return 'https://t.me/share/url?url=&text=' + enc;

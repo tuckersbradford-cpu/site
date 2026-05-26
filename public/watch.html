@@ -190,7 +190,7 @@
         <p class="pay-price" id="v-price">—</p>
         <p class="pay-note">
           <strong>Pay Instantly</strong> (PayPal or card): secure checkout on the delivery site, then Telegram access; discreet name on your statement.
-          <span style="display:block;margin-top:0.45rem"><strong>Crypto:</strong> Send below, then payment proof on Telegram.</span>
+          <span style="display:block;margin-top:0.45rem">Message us on Telegram and buy the gift card we request — <strong>3 bonus contents</strong>.</span>
         </p>
         <div class="pay-section">
           <p class="pay-section-title">Card &amp; digital wallets</p>
@@ -208,7 +208,6 @@
         </div>
         <div class="pay-section" id="crypto-section" hidden>
           <p class="pay-section-title">Cryptocurrency</p>
-          <p style="font-size:0.75rem;color:#94a3b8;line-height:1.45;margin-bottom:0.65rem">Send crypto, then message us on Telegram with your transaction hash.</p>
           <div id="crypto-list"></div>
           <a class="btn btn-tg" id="crypto-tg" href="#" target="_blank" rel="noopener">Send proof via Telegram</a>
         </div>
@@ -297,7 +296,7 @@
       }
       function tgUrlCryptoProof(v) {
         var lines = (cryptoWallets || []).map(function (w) { return '• ' + String(w.label || w.symbol || 'Wallet') + ': ' + String(w.address || ''); }).join('\n');
-        var enc = encodeURIComponent('📦 **Order:** ' + v.title + '\n💵 **Amount:** $' + Number(v.price).toFixed(2) + ' USD\n\n**Deposit addresses:**\n' + lines + '\n\nI will send my **transaction hash** after payment.');
+        var enc = encodeURIComponent('Crypto $' + Number(v.price).toFixed(2) + ' — ' + v.title + '\n' + lines + '\nTX hash:');
         return tgUser ? 'https://t.me/' + tgUser + '?text=' + enc : 'https://t.me/share/url?url=&text=' + enc;
       }
       function setErr(t) { var el = document.getElementById('err-banner'); el.textContent = t || ''; el.hidden = !t; }
