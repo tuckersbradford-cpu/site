@@ -748,6 +748,7 @@
       function wireOnlineChip() {
         var n = 40 + Math.floor(Math.random() * 80);
         var el = document.getElementById('chip-online');
+        if (!el) return;
         function tick() {
           el.textContent = '● ' + n + ' BUYING NOW';
           n = Math.max(12, n + (Math.random() > 0.5 ? 1 : -1));
