@@ -8,16 +8,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #10b981;
-      --primary-light: #34d399;
-      --primary-deep: #059669;
-      --accent: #38bdf8;
+      --primary: #e50914;
+      --primary-light: #ff2d55;
+      --primary-deep: #b20710;
+      --accent: #60a5fa;
       --accent-gold: #fbbf24;
       --bg: #0b1220;
       --text: #f1f5f9;
       --muted: #94a3b8;
       --stroke: rgba(148, 163, 184, 0.14);
-      --red: var(--primary-deep);
+      --red: #e50914;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,8 +26,8 @@
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
       background-image:
-        radial-gradient(ellipse 100% 60% at 50% -20%, rgba(16, 185, 129, 0.09), transparent),
-        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(56, 189, 248, 0.06), transparent);
+        radial-gradient(ellipse 100% 60% at 50% -20%, rgba(229, 9, 20, 0.16), transparent),
+        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(255, 45, 85, 0.09), transparent);
       color: var(--text);
       min-height: 100vh;
       line-height: 1.5;
@@ -68,11 +68,11 @@
     .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
     .chip {
       font-size: 0.68rem; font-weight: 800; padding: 0.32rem 0.65rem; border-radius: 999px;
-      background: rgba(30, 41, 59, 0.92); color: #a7f3d0; border: 1px solid rgba(16, 185, 129, 0.35);
+      background: rgba(30, 41, 59, 0.92); color: #ffd4dc; border: 1px solid rgba(229, 9, 20, 0.35);
     }
     .pay-panel {
       border-radius: 18px;
-      background: linear-gradient(165deg, #151d2e 0%, #111827 55%, #0f172a 100%);
+      background: linear-gradient(165deg, rgba(229, 9, 20, 0.1) 0%, #111827 45%, #0f172a 100%);
       border: 1px solid var(--stroke);
       padding: 1.15rem 1.2rem 1.25rem;
       box-shadow: 0 14px 40px rgba(0,0,0,0.4);
@@ -81,8 +81,8 @@
     .pay-price { font-size: 1.65rem; font-weight: 800; color: #fff; margin-bottom: 0.75rem; }
     .pay-price small { font-size: 0.8rem; opacity: 0.7; margin-left: 0.2rem; }
     .pay-note {
-      font-size: 0.72rem; font-weight: 600; line-height: 1.45; color: #d1fae5;
-      background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.28);
+      font-size: 0.72rem; font-weight: 600; line-height: 1.45; color: #ffd9df;
+      background: rgba(229, 9, 20, 0.08); border: 1px solid rgba(229, 9, 20, 0.3);
       border-radius: 10px; padding: 0.65rem 0.75rem; margin-bottom: 0.9rem;
     }
     .pay-section { margin-bottom: 0.95rem; }
@@ -100,7 +100,7 @@
     .btn-primary {
       background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary-deep) 100%);
       color: #fff; border-color: rgba(5, 150, 105, 0.5);
-      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.25);
+      box-shadow: 0 8px 24px rgba(229, 9, 20, 0.25);
     }
     .btn-primary:hover { filter: brightness(1.06); color: #fff; }
     .btn-tg { background: rgba(56, 189, 248, 0.12); border-color: rgba(56, 189, 248, 0.35); color: #7dd3fc; margin-top: 0.4rem; }
@@ -137,8 +137,8 @@
       display: flex; align-items: flex-start; gap: 0.65rem;
       padding: 0.85rem 1rem; border-radius: 14px;
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      border: 1px solid rgba(16, 185, 129, 0.45);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
+      border: 1px solid rgba(229, 9, 20, 0.45);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 24px rgba(229, 9, 20, 0.18);
       transform: translateY(120%); opacity: 0;
       transition: transform 0.45s var(--ease), opacity 0.45s var(--ease);
       pointer-events: none;

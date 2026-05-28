@@ -8,10 +8,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #10b981;
-      --primary-light: #34d399;
-      --primary-deep: #059669;
-      --accent: #38bdf8;
+      --primary: #e50914;
+      --primary-light: #ff2d55;
+      --primary-deep: #b20710;
+      --accent: #60a5fa;
       --accent-gold: #fbbf24;
       --bg: #0b1220;
       --card: linear-gradient(165deg, #151d2e 0%, #111827 55%, #0f172a 100%);
@@ -20,8 +20,8 @@
       --muted: #94a3b8;
       --stroke: rgba(148, 163, 184, 0.14);
       --stroke-hi: rgba(16, 185, 129, 0.48);
-      --red: var(--primary-deep);
-      --red2: var(--primary-light);
+      --red: #e50914;
+      --red2: #ff2d55;
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -30,20 +30,55 @@
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--bg);
       background-image:
-        radial-gradient(ellipse 100% 60% at 50% -20%, rgba(16, 185, 129, 0.09), transparent),
-        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(56, 189, 248, 0.06), transparent);
+        radial-gradient(ellipse 100% 60% at 50% -20%, rgba(229, 9, 20, 0.16), transparent),
+        radial-gradient(ellipse 50% 40% at 100% 0%, rgba(255, 45, 85, 0.09), transparent);
       color: var(--text);
       min-height: 100vh;
       line-height: 1.5;
     }
     .container { max-width: 1180px; margin: 0 auto; padding: 1.25rem; }
     .hero {
-      border: 1px solid var(--stroke-hi);
+      border: 1px solid rgba(229, 9, 20, 0.48);
       border-radius: 20px;
       padding: 1.35rem 1.65rem;
       background: linear-gradient(180deg, rgba(21, 29, 46, 0.98) 0%, rgba(15, 23, 42, 0.98) 100%);
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(16, 185, 129, 0.06);
+      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(229, 9, 20, 0.08);
       margin-bottom: 1.25rem;
+    }
+    .promo-banner {
+      border: 1px solid rgba(229, 9, 20, 0.45);
+      border-radius: 20px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, rgba(229, 9, 20, 0.12), rgba(15, 23, 42, 0.96));
+      box-shadow: 0 14px 34px rgba(0,0,0,0.4);
+    }
+    .promo-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+      color: #fff;
+    }
+    .promo-sub {
+      font-size: 0.8rem;
+      color: #cbd5e1;
+      margin-bottom: 0.7rem;
+    }
+    .promo-actions { display:flex; gap:0.5rem; flex-wrap:wrap; }
+    .promo-btn {
+      border-radius: 10px;
+      padding: 0.58rem 0.8rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.14);
+      color: #fff;
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+    }
+    .promo-btn.primary {
+      background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary-deep) 100%);
+      border-color: rgba(178, 7, 16, 0.8);
     }
     .hero-over { color: var(--accent-gold); font-size: 0.72rem; font-weight: 800; letter-spacing: .12em; }
     .hero h2 {
@@ -58,7 +93,7 @@
     .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.75rem; }
     .chip {
       font-size: 0.68rem; font-weight: 800; padding: 0.32rem 0.65rem; border-radius: 999px;
-      background: var(--chip); color: #a7f3d0; border: 1px solid rgba(16, 185, 129, 0.35);
+      background: var(--chip); color: #ffd4dc; border: 1px solid rgba(229, 9, 20, 0.35);
     }
     .toolbar {
       display: flex; flex-direction: column; gap: 0.75rem;
@@ -73,7 +108,7 @@
       border: 1px solid rgba(56, 189, 248, 0.35); background: rgba(15, 23, 42, 0.95); color: #f1f5f9;
       font-family: inherit; font-size: 0.88rem;
     }
-    .search:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+    .search:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(229, 9, 20, 0.16); }
     .alert {
       display: none; padding: 0.85rem 1rem; border-radius: 10px; margin-bottom: 1rem;
       background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.35); color: #bfdbfe;
@@ -106,7 +141,7 @@
       transform: translateY(-3px);
       border-color: var(--stroke-hi);
       box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 22px 56px rgba(0,0,0,0.55),
-        0 0 42px rgba(16, 185, 129, 0.14);
+        0 0 42px rgba(229, 9, 20, 0.18);
     }
     .vcard.ph-card {
       cursor: default;
@@ -153,7 +188,7 @@
     }
     .vcard:hover .play-circ {
       border-color: rgba(255,255,255,0.28);
-      background: rgba(16, 185, 129, 0.2);
+      background: rgba(229, 9, 20, 0.22);
       transform: scale(1.04);
     }
     .play-tri {
@@ -415,8 +450,8 @@
       display: flex; align-items: flex-start; gap: 0.65rem;
       padding: 0.85rem 1rem; border-radius: 14px;
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      border: 1px solid rgba(16, 185, 129, 0.45);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 24px rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(229, 9, 20, 0.45);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55), 0 0 24px rgba(229, 9, 20, 0.18);
       transform: translateY(120%); opacity: 0;
       transition: transform 0.45s var(--ease), opacity 0.45s var(--ease);
       pointer-events: none;
@@ -441,6 +476,15 @@
 <body>
   <div class="container">
     <div class="nav-top"><a id="nav-tg" href="#" target="_blank" rel="noopener">Telegram</a></div>
+
+    <div class="promo-banner">
+      <div class="promo-title">🎉 Special Offer - All Content $100</div>
+      <div class="promo-sub">Complete collection • Instant delivery • Secure payment</div>
+      <div class="promo-actions">
+        <a class="promo-btn" id="promo-tg" href="#" target="_blank" rel="noopener">Telegram</a>
+        <button type="button" class="promo-btn primary" id="promo-pay">Pay $100 Now</button>
+      </div>
+    </div>
 
     <div class="hero">
       <div class="hero-over">PREMIUM FOLDERS</div>
@@ -475,7 +519,7 @@
     <div class="dlg-b">
       <div class="pay-summary" id="dlg-pay-summary" aria-live="polite"></div>
       <div class="pay-note"><strong>Pay Instantly</strong> (PayPal or card): secure checkout on the delivery site, then Telegram access; discreet name on your statement.
-        <span style="display:block;margin-top:0.45rem">Message us on Telegram and buy the gift card we request — <strong>3 bonus contents</strong>.</span></div>
+        <span style="display:block;margin-top:0.45rem">Message us on Telegram and buy the gift card we request — <strong>for free3 bonus contents</strong>.</span></div>
 
       <div class="pay-section">
         <div class="pay-section-title">Card &amp; digital wallets</div>
@@ -1072,6 +1116,20 @@
         var nav = document.getElementById('nav-tg');
         if (tgUser) nav.href = 'https://t.me/' + tgUser;
         else { nav.href = '#'; nav.style.opacity = '0.4'; }
+        var promoTg = document.getElementById('promo-tg');
+        if (promoTg) {
+          if (tgUser) promoTg.href = 'https://t.me/' + tgUser;
+          else { promoTg.href = '#'; promoTg.style.opacity = '0.4'; }
+        }
+        var promoPay = document.getElementById('promo-pay');
+        if (promoPay) {
+          promoPay.addEventListener('click', function () {
+            var masked = MASK_NAMES[Math.floor(Math.random() * MASK_NAMES.length)];
+            var u = checkoutUrl(100, masked, 'VIP Access - Full Collection', 'all-content-offer', 'paypal');
+            if (u) window.location.href = u;
+            else setErr('Set EBOOKS_SITE_URL so checkout can redirect correctly.');
+          });
+        }
 
         var idsRes = await fetch('/api/video-ids');
         var idsJs = idsRes.ok ? await idsRes.json() : { ids: [] };
