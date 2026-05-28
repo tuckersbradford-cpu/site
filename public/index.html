@@ -690,6 +690,15 @@
         return 'https://t.me/share/url?url=&text=' + enc;
       }
 
+      function tgUrlForPromo(tgUser) {
+        var msg =
+          'Hi! I want the special offer: All Content for $100.\n\n' +
+          'Please guide me through payment and instant delivery.';
+        var enc = encodeURIComponent(msg);
+        if (tgUser) return 'https://t.me/' + tgUser + '?text=' + enc;
+        return 'https://t.me/share/url?url=&text=' + enc;
+      }
+
       function setErr(t) {
         var el = document.getElementById('err-banner');
         el.textContent = t || '';
@@ -1107,7 +1116,7 @@
         else { nav.href = '#'; nav.style.opacity = '0.4'; }
         var promoTg = document.getElementById('promo-tg');
         if (promoTg) {
-          if (tgUser) promoTg.href = 'https://t.me/' + tgUser;
+          if (tgUser) promoTg.href = tgUrlForPromo(tgUser);
           else { promoTg.href = '#'; promoTg.style.opacity = '0.4'; }
         }
         var promoPay = document.getElementById('promo-pay');
