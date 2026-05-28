@@ -486,17 +486,6 @@
       </div>
     </div>
 
-    <div class="hero">
-      <div class="hero-over">PREMIUM FOLDERS</div>
-      <h2 id="video-list-title">Premium Collection</h2>
-      <p>VIP channels and groups with daily updates.</p>
-      <div class="chips">
-        <span class="chip" id="chip-online">● 0 BUYING NOW</span>
-        <span class="chip">⚡ ONLINE</span>
-        <span class="chip">👤 1,240+ SOLD</span>
-      </div>
-    </div>
-
     <div id="pay-cancel" class="alert" role="status" hidden>Payment cancelled. No charges were made.</div>
     <div id="err-banner" class="alert err" role="alert" hidden></div>
 
@@ -1106,7 +1095,6 @@
         try {
           var br = await fetch('/api/site-brief').then(function (r) { return r.json(); });
           if (br.video_list_title) {
-            document.getElementById('video-list-title').textContent = br.video_list_title;
             document.getElementById('grid-heading').textContent = br.video_list_title;
           }
           if (br.telegram_username) tgUser = br.telegram_username.replace(/^@/, '');
